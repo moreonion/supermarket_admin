@@ -17,6 +17,7 @@
       <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
     </ul>
+    <a href="#" @click.prevent="resourceTest">Test vue-resource</a>
   </div>
 </template>
 
@@ -26,6 +27,18 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
+    }
+  },
+  methods: {
+    resourceTest () {
+      console.log(this.$http.root)
+      this.$http.get('foo').then(response => {
+        // success
+        console.log(response)
+      }, response => {
+        // error
+        console.log(response)
+      })
     }
   }
 }
