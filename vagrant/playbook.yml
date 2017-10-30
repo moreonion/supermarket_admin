@@ -1,0 +1,54 @@
+---
+
+- hosts: default
+  become: yes
+  become_user: root
+  tasks:
+    - apt: update_cache=yes
+
+    - name: install prerequisites
+      apt: name={{ item }} state=present install_recommends=no
+      with_items:
+        # for remote execution of ansible files
+        - acl
+        # for yarn repository
+        - apt-transport-https
+
+    - name: install node prerequisites
+      apt: name={{ item }} state=present install_recommends=no
+      with_items:
+        - libc-ares2
+
+    # nuxt needs node 6
+    - name: install node from sid
+      apt: deb=http://ftp.de.debian.org/debian/pool/main/n/nodejs/nodejs_6.11.4~dfsg-1_amd64.deb state=present install_recommends=no
+
+    - name: alternative /usr/bin/node
+      alternatives: name=node link=/usr/bin/node path=/usr/bin/nodejs
+
+    # key: https://dl.yarnpkg.com/debian/pubkey.gpg
+    # sha256sum: 9d9139d2e2075665ef35bdb6f32f750918fe18ce1c904d9316a42f614179daea
+    - name: add yarn apt-key
+      apt_key: id=1646B01B86E50310 data={{ lookup('file', 'yarn-repository.asc') }} state=present
+      register: yarn_apt_key
+
+    - name: add yarn repository
+      apt_repository: repo='deb https://dl.yarnpkg.com/debian/ stable main' state=present filename='yarn'
+      register: yarn_apt_repository
+
+    - name: update apt cache
+      apt: update_cache=yes
+      when: yarn_apt_key.changed or yarn_apt_repository.changed
+
+    - name: install yarn
+      apt: state=latest name={{ item }} install_recommends=no
+      with_items:
+        - yarn
+
+    - name: yarn provides /usr/bin/npm
+      alternatives: name=npm link=/usr/bin/npm path=/usr/bin/yarn
+
+    - name: install SASS
+      apt: state=latest name={{ item }} install_recommends=no
+      with_items:
+        - sassc
