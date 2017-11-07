@@ -19,6 +19,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Nuxt
   config.vm.network "forwarded_port", guest: 3000, host: 3000
+  config.vm.network "forwarded_port", guest: 8080, host: 8080
   config.vm.synced_folder ".", "/home/vagrant/hostdir", nfs: false
 
   config.vm.provider "virtualbox" do |v|

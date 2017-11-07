@@ -63,3 +63,14 @@
       environment:
         PATH: "/home/vagrant/.yarn/bin:{{ ansible_env.PATH }}"
       become_user: vagrant
+
+    - name: install nginx-light
+      apt: state=present name={{ item }} install_recommends=no
+      with_items:
+        - nginx-light
+
+    - name: install nuxt nginx site
+      copy: src=nginx/nuxt dest=/etc/nginx/sites-available/nuxt owner=root group=root mode=0640
+
+    - name: enable nuxt nginx site
+      file: state=link src=/etc/nginx/sites-available/nuxt dest=/etc/nginx/sites-enabled/nuxt

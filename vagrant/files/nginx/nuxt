@@ -1,0 +1,12 @@
+# nginx server to provide a built nuxt SPA at http://nuxt.localhost:8080
+# use it to test a `nuxt generate --spa` build
+
+server {
+  listen 0.0.0.0:8080;
+  server_name nuxt.localhost;
+  root /home/vagrant/hostdir/dist;
+
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
+}
