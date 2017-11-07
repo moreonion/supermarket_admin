@@ -12,3 +12,5 @@ dist
 
 # vagrant
 .vagrant
+
+yarn-error.log
