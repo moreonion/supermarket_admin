@@ -1,7 +1,6 @@
 <template>
   <section class="container">
     <div>
-      <logo/>
       <h1 class="title">
         supermarket-admin
       </h1>
@@ -14,12 +13,7 @@
 <script>
 import { createWebAuth } from '~/utils/auth'
 
-import Logo from '~/components/Logo.vue'
-
 export default {
-  components: {
-    Logo
-  },
   methods: {
     login () {
       // redirect to authentication page of Auth0
