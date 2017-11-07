@@ -52,3 +52,14 @@
       apt: state=latest name={{ item }} install_recommends=no
       with_items:
         - sassc
+
+    - name: PATH config
+      copy: src=bashrc.local dest=~vagrant/.bashrc.local owner=vagrant group=vagrant mode=0640
+
+    - name: install vue-cli globally
+      shell: /usr/bin/yarn global add vue-cli
+      args:
+        creates: ~/.yarn/bin/vue
+      environment:
+        PATH: "/home/vagrant/.yarn/bin:{{ ansible_env.PATH }}"
+      become_user: vagrant
