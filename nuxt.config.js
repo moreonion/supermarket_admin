@@ -1,5 +1,9 @@
 module.exports = {
   /*
+  ** The mode of Nuxt
+  */
+  mode: 'spa',
+  /*
   ** Headers of the page
   */
   head: {
