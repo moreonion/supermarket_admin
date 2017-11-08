@@ -4,6 +4,12 @@ module.exports = {
   */
   mode: 'spa',
   /*
+  ** Router
+  */
+  router: {
+    middleware: 'check'
+  },
+  /*
   ** Headers of the page
   */
   head: {

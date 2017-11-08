@@ -20,6 +20,11 @@ export const unsetAuth = () => {
   window.localStorage.setItem('logout', Date.now())
 }
 
+export const getUserFromLocalStorage = () => {
+  const json = window.localStorage.user
+  return json ? JSON.parse(json) : null
+}
+
 export const createWebAuth = () => {
   return new auth0.WebAuth(
     {

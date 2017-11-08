@@ -13,6 +13,7 @@
 import { loginRedirect } from '~/utils/auth'
 
 export default {
+  middleware: 'anonymous',
   methods: {
     loginRedirect
   }
