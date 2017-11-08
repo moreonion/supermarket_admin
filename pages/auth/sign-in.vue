@@ -2,24 +2,19 @@
   <section class="container">
     <div>
       <h1 class="title">
-        supermarket-admin
+        Sign in
       </h1>
-      <p>Log In with Auth0's Lock Widget.</p>
-      <button @click="login()">Log In</button>
+      <button @click="loginRedirect()" class="btn btn-outline-primary btn-lg">Sign in via Auth0..</button>
     </div>
   </section>
 </template>
 
 <script>
-import { createWebAuth } from '~/utils/auth'
+import { loginRedirect } from '~/utils/auth'
 
 export default {
   methods: {
-    login () {
-      // redirect to authentication page of Auth0
-      let webAuth = createWebAuth()
-      webAuth.authorize()
-    }
+    loginRedirect
   }
 }
 </script>

@@ -1,13 +1,21 @@
 <template>
-  <p>Signing off...</p>
+  <section class="container">
+    <div>
+      <h1 class="title">
+        Signing off...
+      </h1>
+    </div>
+  </section>
 </template>
 
 <script>
-import { unsetToken } from '~/utils/auth'
+import { unsetAuth, logoutRedirect } from '~/utils/auth'
 
 export default {
   mounted () {
-    unsetToken()
+    unsetAuth()
+    this.$store.commit('SET_USER', null)
+    logoutRedirect()
   }
 }
 </script>

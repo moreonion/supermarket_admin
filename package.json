@@ -21,6 +21,7 @@
   "dependencies": {
     "@nuxtjs/bootstrap-vue": "^2.0.2",
     "auth0-js": "^8.10.1",
+    "jwt-decode": "^2.2.0",
     "nuxt": "^1.0.0-rc11"
   },
   "devDependencies": {

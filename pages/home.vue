@@ -2,23 +2,22 @@
   <section class="container">
     <div>
       <h1 class="title">
-        supermarket-admin
+        Hello {{ loggedUser.email }}!
       </h1>
-      <h2 class="subtitle">
-        Admin interface for the Supplycha!nge database.
-      </h2>
       <div class="links">
         <nuxt-link v-if="!isAuthenticated" to="/auth/sign-in" class="btn btn-outline-primary btn-lg">Sign in</nuxt-link>
+        <nuxt-link v-if="isAuthenticated" to="/" class="btn btn-outline-primary btn-lg">Index</nuxt-link>
         <nuxt-link v-if="isAuthenticated" to="/home" class="btn btn-outline-primary btn-lg">Home</nuxt-link>
         <nuxt-link v-if="isAuthenticated" to="/auth/sign-off" class="btn btn-outline-primary btn-lg">Sign off</nuxt-link>
       </div>
     </div>
   </section>
 </template>
+
 <script>
 import { mapGetters } from 'vuex'
 
 export default {
-  computed: mapGetters(['isAuthenticated'])
+  computed: mapGetters(['loggedUser', 'isAuthenticated'])
 }
 </script>
