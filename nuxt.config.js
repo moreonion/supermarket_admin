@@ -45,6 +45,12 @@ module.exports = {
       }
     }
   },
+  watchers: {
+    webpack: {
+      aggregateTimeout: 300,
+      poll: 1000
+    }
+  },
   modules: [
     '@nuxtjs/bootstrap-vue',
   ]
