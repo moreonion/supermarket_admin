@@ -1,8 +1,8 @@
 <template>
-  <section class="container">
+  <section class="container-centered">
     <div>
-      <h1 class="title">
-        supermarket-admin
+      <h1 class="big-title">
+        Supermarket Admin
       </h1>
       <h2 class="subtitle">
         Admin interface for the Supplycha!nge database.

@@ -1,5 +1,5 @@
 <template>
-  <section class="container">
+  <section class="container-centered">
     <div>
       <h1 class="title">
         Signing off...
