@@ -19,6 +19,7 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
+    "@nuxtjs/axios": "^4.4.0",
     "@nuxtjs/bootstrap-vue": "^2.0.4",
     "auth0-js": "^8.10.1",
     "jwt-decode": "^2.2.0",

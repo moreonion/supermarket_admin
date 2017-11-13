@@ -3,11 +3,15 @@ import Vuex from 'vuex'
 const createStore = () => {
   return new Vuex.Store({
     state: {
-      user: null
+      user: null,
+      labels: []
     },
     mutations: {
       SET_USER (state, user) {
         state.user = user || null
+      },
+      SET_LABELS (state, labels) {
+        state.labels = labels || []
       }
     },
     getters: {
@@ -16,6 +20,9 @@ const createStore = () => {
       },
       loggedUser (state) {
         return state.user
+      },
+      allLabels (state) {
+        return state.labels
       }
     }
   })

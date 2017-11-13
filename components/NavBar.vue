@@ -5,6 +5,7 @@
         <b-navbar-nav>
           <li class="nav-item"><nuxt-link class="nav-link" to="/" exact>Index</nuxt-link></li>
           <li class="nav-item" v-if="isAuthenticated"><nuxt-link class="nav-link" to="/home">Home</nuxt-link></li>
+          <li class="nav-item" v-if="isAuthenticated"><nuxt-link class="nav-link" to="/labels">Labels</nuxt-link></li>
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
           <li class="nav-item" v-if="!isAuthenticated"><nuxt-link class="nav-link" to="/auth/sign-in">Sign in</nuxt-link></li>
