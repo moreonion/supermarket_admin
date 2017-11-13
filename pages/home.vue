@@ -4,7 +4,7 @@
       <h1 class="title">
         Hello {{ loggedUser.email }}!
       </h1>
-      <div class="links">
+      <div class="btn-group">
         <nuxt-link v-if="!isAuthenticated" to="/auth/sign-in" class="btn btn-outline-primary btn-lg">Sign in</nuxt-link>
         <nuxt-link v-if="isAuthenticated" to="/" class="btn btn-outline-primary btn-lg">Index</nuxt-link>
         <nuxt-link v-if="isAuthenticated" to="/home" class="btn btn-outline-primary btn-lg">Home</nuxt-link>
