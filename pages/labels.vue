@@ -32,7 +32,7 @@ export default {
   middleware: 'authenticated',
   computed: mapGetters(['allLabels']),
   mounted () {
-    this.$axios.get('https://api.supplychainge.org/api/v1/labels')
+    this.$axios.get('/labels')
       .then((resp) => {
         this.showFetchSuccess()
         this.$store.commit('SET_LABELS', resp.data.items)

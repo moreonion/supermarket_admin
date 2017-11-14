@@ -65,5 +65,9 @@ module.exports = {
   modules: [
     '@nuxtjs/bootstrap-vue',
     '@nuxtjs/axios'
-  ]
+  ],
+  axios: {
+    browserBaseURL: 'https://api.supplychainge.org/api/v1',
+    credentials: false
+  }
 }
