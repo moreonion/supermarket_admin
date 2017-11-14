@@ -51,6 +51,9 @@ module.exports = {
       poll: 1000
     }
   },
+  plugins: [
+    { src: '~/plugins/vue-notifications', ssr: false }
+  ],
   modules: [
     '@nuxtjs/bootstrap-vue',
     '@nuxtjs/axios'

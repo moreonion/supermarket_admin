@@ -25,18 +25,21 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { t } from '~/utils/utils'
+import { t, NotificationMixin } from '~/utils/utils'
 
 export default {
+  mixins: [ NotificationMixin ],
   middleware: 'authenticated',
   computed: mapGetters(['allLabels']),
   mounted () {
     this.$axios.get('https://api.supplychainge.org/api/v1/labels')
       .then((resp) => {
+        this.showFetchSuccess()
         this.$store.commit('SET_LABELS', resp.data.items)
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err.response)
+        this.showFetchError(err)
       })
   },
   methods: {

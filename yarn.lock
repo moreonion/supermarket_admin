@@ -5315,6 +5315,10 @@ vue-meta@^1.1.0:
     lodash.isplainobject "^4.0.6"
     object-assign "^4.1.1"
 
+vue-notifications@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/vue-notifications/-/vue-notifications-0.9.0.tgz#7d25e19a5e4872442e3527f252007d538af4ba6e"
+
 vue-router@^2.7.0:
   version "2.8.1"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-2.8.1.tgz#9833c9ee57ac83beb0269056fefee71713f20695"
