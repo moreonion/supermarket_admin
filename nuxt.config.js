@@ -4,6 +4,14 @@ module.exports = {
   */
   mode: 'spa',
   /*
+  ** Environment variables
+  */
+  env: {
+    auth0ClientID: process.env.AUTH0_CLIENT_ID || 'MZ2mvE76dHIpNuWvia8fa6m6FNSpDmPi',
+    auth0ClientDomain: process.env.AUTH0_CLIENT_DOMAIN || 'moreonion.eu.auth0.com',
+    auth0Audience: process.env.AUTH0_AUDIENCE || 'supermarket-api'
+  },
+  /*
   ** Router
   */
   router: {

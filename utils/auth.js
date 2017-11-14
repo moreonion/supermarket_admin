@@ -1,7 +1,5 @@
 import auth0 from 'auth0-js'
 
-const config = require('~/config.json')
-
 const getBaseUrl = () => {
   if (process.SERVER_BUILD) return
   return `${window.location.protocol}//${window.location.host}`
@@ -28,10 +26,10 @@ export const getUserFromLocalStorage = () => {
 export const createWebAuth = () => {
   return new auth0.WebAuth(
     {
-      clientID: config.AUTH0_CLIENT_ID,
-      domain: config.AUTH0_CLIENT_DOMAIN,
+      clientID: process.env.auth0ClientID,
+      domain: process.env.auth0ClientDomain,
       redirectUri: `${getBaseUrl()}/auth/signed-in`,
-      audience: 'supermarket-api',
+      audience: process.env.auth0Audience,
       responseType: 'token id_token',
       scope: 'openid email'
     }
