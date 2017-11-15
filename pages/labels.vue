@@ -5,6 +5,12 @@
         Labels
       </h1>
 
+      <div class="container mb-3">
+        <div class="btn-group">
+          <b-btn class="btn btn-outline-primary" v-b-modal.label-form>New</b-btn>
+        </div>
+      </div>
+
       <table class="table">
         <thead>
           <tr>
@@ -19,6 +25,51 @@
           </tr>
         </tbody>
       </table>
+
+      <b-modal id="label-form" title="New Label">
+        <p class="mb-2">Create a new label</p>
+
+        <b-form @submit.prevent="onSubmit" novalidate>
+          <b-form-group id="group-name"
+                        description="The name of the label"
+                        label="Label name"
+          >
+            <b-form-input id="label-name" class="mb-2"
+                          type="text" v-model.trim="form.name" required
+                          placeholder="Label name"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-select id="label-type" class="mb-2"
+                         type="text" v-model="form.type" required
+                         :options="spec.type.options"
+                         placeholder="Logo URL"
+          ></b-form-select>
+          <b-form-group id="group-logo"
+                        description="A URL to a logo for the label."
+                        label="Logo URL"
+          >
+            <b-form-input id="label-logo" class="mb-2"
+                          type="url" v-model="form.logo"
+                          placeholder="Logo URL"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-textarea id="label-description" class="mb-2"
+                           type="text" v-model="form.description"
+                           placeholder="Description"
+                           rows="3"
+          ></b-form-textarea>
+          <b-form-textarea id="label-details" class="mb-2"
+                           type="text" v-model="form.details"
+                           placeholder="Details"
+                           rows="3"
+          ></b-form-textarea>
+
+          <div class="my-2">
+            <b-button type="submit" variant="primary" class="ml-1 float-right">Submit</b-button>
+            <b-button type="reset" variant="secondary" class="ml-1 float-right">Reset</b-button>
+          </div>
+        </b-form>
+      </b-modal>
     </div>
   </section>
 </template>
@@ -31,6 +82,25 @@ export default {
   mixins: [ NotificationMixin ],
   middleware: 'authenticated',
   computed: mapGetters(['allLabels']),
+  data () {
+    return {
+      spec: {
+        type: {
+          options: [
+            { value: 'product', text: 'Product' },
+            { value: 'retailer', text: 'Retailer' }
+          ]
+        }
+      },
+      form: {
+        name: '',
+        type: 'product', // default
+        logo: '',
+        description: '',
+        details: ''
+      }
+    }
+  },
   mounted () {
     this.$axios.get('/labels')
       .then((resp) => {
@@ -43,7 +113,12 @@ export default {
       })
   },
   methods: {
-    t
+    t,
+    onSubmit (ev) {
+      // add class `was-validated` for custom BS4 validations to work
+      ev.target.classList.add('was-validated')
+      console.log(JSON.stringify(this.form))
+    }
   }
 }
 </script>
