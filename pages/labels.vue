@@ -26,7 +26,7 @@
         </tbody>
       </table>
 
-      <b-modal id="label-form" title="New Label" size="lg">
+      <b-modal ref="labelFormModal" id="label-form" title="New Label" size="lg" hide-footer>
         <p class="mb-2">Create a new label</p>
 
         <div class="container mb-3 text-right">
@@ -88,9 +88,10 @@
                            rows="3"
           ></b-form-textarea>
 
-          <div class="my-2">
-            <b-button type="submit" variant="primary" class="ml-1 float-right">Submit</b-button>
-            <b-button type="reset" variant="secondary" class="ml-1 float-right">Reset</b-button>
+          <div class="my-3">
+            <b-btn type="submit" size="lg" class="ml-2 float-right" variant="primary">Submit</b-btn>
+            <b-btn type="reset" size="lg" class="ml-2 float-right" variant="secondary" @click="resetFormData">Reset</b-btn>
+            <b-btn size="lg" class="ml-2 float-right" variant="secondary" @click="show=false">Close</b-btn>
           </div>
         </b-form>
       </b-modal>
@@ -102,6 +103,16 @@
 import { mapGetters } from 'vuex'
 import LanguageEnabler from '~/components/LanguageEnabler'
 import { t, NotificationMixin } from '~/utils/utils'
+
+// copy with `JSON.parse(JSON.stringify(defaultFormData))`
+// to prevent setting references to this "immutable" object
+const defaultFormData = {
+  name: {}, // translated
+  type: 'product', // default
+  logo: {}, // translated
+  description: {}, // translated
+  details: '' // JSON
+}
 
 export default {
   mixins: [ NotificationMixin ],
@@ -121,11 +132,7 @@ export default {
         }
       },
       form: {
-        name: {}, // translated
-        type: 'product', // default
-        logo: {}, // translated
-        description: {}, // translated
-        details: '' // JSON
+        ...JSON.parse(JSON.stringify(defaultFormData))
       }
     }
   },
@@ -142,6 +149,10 @@ export default {
   },
   methods: {
     t,
+    resetFormData (newLabel) {
+      console.log(defaultFormData)
+      this.form = JSON.parse(JSON.stringify(defaultFormData))
+    },
     postNewLabel (newLabel) {
       const authenticationHeader = { 'Authorization': `Bearer ${this.accessToken}` }
       this.$axios.post('/labels', newLabel, {
@@ -155,13 +166,22 @@ export default {
           this.showCreateError(err)
         })
     },
+    hideModal () {
+      this.$refs.labelFormModal.hide()
+    },
     onSubmit (ev) {
       // add class `was-validated` for custom BS4 validations to work
       ev.target.classList.add('was-validated')
+
       console.log(JSON.stringify(this.form))
+
       if (ev.target.checkValidity()) {
         console.log('valid form')
+
         this.postNewLabel(this.form)
+
+        this.resetFormData()
+        this.hideModal()
       } else {
         console.log('invalid form')
       }
