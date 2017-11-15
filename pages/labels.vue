@@ -16,12 +16,14 @@
           <tr>
             <th scope="col">ID</th>
             <th scope="col">Name</th>
+            <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="label in allLabels" :key="label">
             <td>{{ label }}</td>
             <td>{{ t(allLabelStates[label].name) }}</td>
+            <td><b-btn size="sm" variant="outline-primary" @click="showEditModal(label)">Edit</b-btn></td>
           </tr>
         </tbody>
       </table>
@@ -117,6 +119,9 @@ export default {
   computed: mapGetters(['allLabels', 'allLabelStates', 'allEnabledLanguages', 'accessToken']),
   data () {
     return {
+      currentAction: 'create', // or 'edit'
+      currentFormId: null, // or an ID of a label being edited
+      editableFields: ['name', 'description', 'logo', 'type'],
       spec: {
         type: {
           options: [
@@ -170,9 +175,63 @@ export default {
           this.showCreateError(err)
         })
     },
+    putLabel (editedLabel, labelId) {
+      const authenticationHeader = { 'Authorization': `Bearer ${this.accessToken}` }
+      this.$axios.put(`/labels/${labelId}`, editedLabel, {
+        headers: { ...authenticationHeader }
+      })
+        .then((resp) => {
+          this.showCreateSuccess()
+        })
+        .catch((err) => {
+          console.log(err.response)
+          this.showCreateError(err)
+        })
+    },
+    /*
+     * get a full label from the store
+     * (for now no not found handling, we assume we have fetched it)
+     */
+    getLabel (id) {
+      return this.allLabelStates[id]
+    },
+    /*
+     * we only want to edit some of the properties we get from the API
+     * e.g. not the references for now, so we want to operate on a
+     * filtered down form object we can PUT on the server later
+     */
+    getFilteredLabel (id) {
+      const label = this.getLabel(id)
+
+      const filtered = Object.keys(label)
+        .filter(key => this.editableFields.includes(key))
+        .reduce((obj, key) => {
+          obj[key] = label[key]
+          return obj
+        }, {})
+
+      return filtered
+    },
+    /*
+     * setup the the form property and editing state
+     * then open the modal
+     */
+    showEditModal (id) {
+      this.form = JSON.parse(JSON.stringify(this.getFilteredLabel(id)))
+      this.currentAction = 'edit'
+      this.currentFormId = id
+      this.showModal()
+    },
+    showModal () {
+      this.$refs.labelFormModal.show()
+    },
     hideModal () {
       this.$refs.labelFormModal.hide()
     },
+    /*
+     * depending on the editing state, we want to POST a new label
+     * or PUT an edited own on the server
+     */
     onSubmit (ev) {
       // add class `was-validated` for custom BS4 validations to work
       ev.target.classList.add('was-validated')
@@ -182,8 +241,15 @@ export default {
       if (ev.target.checkValidity()) {
         console.log('valid form')
 
-        this.postNewLabel(this.form)
+        if (this.currentAction === 'edit') {
+          this.putLabel(this.form, this.currentFormId)
+        } else {
+          this.postNewLabel(this.form)
+        }
 
+        // reset state
+        this.currentAction = 'create'
+        this.currentFormId = null
         this.resetFormData()
         this.hideModal()
       } else {
