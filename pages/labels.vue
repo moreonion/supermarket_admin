@@ -35,7 +35,7 @@
                         label="Label name"
           >
             <b-form-input id="label-name" class="mb-2"
-                          type="text" v-model.trim="form.name" required
+                          type="text" v-model.trim="form.name.de" required
                           placeholder="Label name"
             ></b-form-input>
           </b-form-group>
@@ -49,12 +49,12 @@
                         label="Logo URL"
           >
             <b-form-input id="label-logo" class="mb-2"
-                          type="url" v-model="form.logo"
+                          type="url" v-model="form.logo.de"
                           placeholder="Logo URL"
             ></b-form-input>
           </b-form-group>
           <b-form-textarea id="label-description" class="mb-2"
-                           type="text" v-model="form.description"
+                           type="text" v-model="form.description.de"
                            placeholder="Description"
                            rows="3"
           ></b-form-textarea>
@@ -93,10 +93,16 @@ export default {
         }
       },
       form: {
-        name: '',
+        name: {
+          de: ''
+        },
         type: 'product', // default
-        logo: '',
-        description: '',
+        logo: {
+          de: ''
+        },
+        description: {
+          de: ''
+        },
         details: ''
       }
     }
@@ -114,10 +120,30 @@ export default {
   },
   methods: {
     t,
+    postNewLabel (newLabel) {
+      const token = window.localStorage.getItem('access_token')
+      const authenticationHeader = { 'Authorization': `Bearer ${token}` }
+      this.$axios.post('/labels', newLabel, {
+        headers: { ...authenticationHeader }
+      })
+        .then((resp) => {
+          this.showCreateSuccess()
+        })
+        .catch((err) => {
+          console.log(err.response)
+          this.showCreateError(err)
+        })
+    },
     onSubmit (ev) {
       // add class `was-validated` for custom BS4 validations to work
       ev.target.classList.add('was-validated')
       console.log(JSON.stringify(this.form))
+      if (ev.target.checkValidity()) {
+        console.log('valid form')
+        this.postNewLabel(this.form)
+      } else {
+        console.log('invalid form')
+      }
     }
   }
 }

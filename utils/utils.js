@@ -31,6 +31,16 @@ export const NotificationMixin = {
         title: 'Error',
         message: err.message
       })
+    },
+    showCreateSuccess () {
+      this.notifySuccess()
+    },
+    // expects an axios error object
+    showCreateError (err) {
+      this.notifyError({
+        title: 'Error',
+        message: err.message
+      })
     }
   }
 }
