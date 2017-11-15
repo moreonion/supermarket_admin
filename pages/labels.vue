@@ -19,9 +19,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="label in allLabels" :key="label.id">
-            <td>{{ label.id }}</td>
-            <td>{{ t(label.name) }}</td>
+          <tr v-for="label in allLabels" :key="label">
+            <td>{{ label }}</td>
+            <td>{{ t(allLabelStates[label].name) }}</td>
           </tr>
         </tbody>
       </table>
@@ -95,7 +95,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import LanguageEnabler from '~/components/LanguageEnabler'
 import { t, NotificationMixin } from '~/utils/utils'
 
@@ -114,7 +114,7 @@ export default {
     LanguageEnabler
   },
   middleware: 'authenticated',
-  computed: mapGetters(['allLabels', 'allEnabledLanguages', 'accessToken']),
+  computed: mapGetters(['allLabels', 'allLabelStates', 'allEnabledLanguages', 'accessToken']),
   data () {
     return {
       spec: {
@@ -131,18 +131,28 @@ export default {
     }
   },
   mounted () {
-    this.$axios.get('/labels')
-      .then((resp) => {
-        this.showFetchSuccess()
-        this.$store.commit('SET_LABELS', resp.data.items)
-      })
-      .catch((err) => {
-        console.log(err.response)
-        this.showFetchError(err)
-      })
+    this.fetchLabels()
   },
   methods: {
+    ...mapActions(['setLabels']),
     t,
+    /*
+     * call the API for some labels, then let the store action `setLabels` deal
+     * with reducing the response and storing the items
+     */
+    fetchLabels () {
+      this.$axios.get('/labels')
+        .then((resp) => {
+          console.log('success: fetching labels')
+          this.showFetchSuccess()
+
+          this.setLabels(resp.data.items)
+        })
+        .catch((err) => {
+          console.log(err.response)
+          this.showFetchError(err)
+        })
+    },
     resetFormData (newLabel) {
       console.log(defaultFormData)
       this.form = JSON.parse(JSON.stringify(defaultFormData))

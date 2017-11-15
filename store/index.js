@@ -10,7 +10,8 @@ const createStore = () => {
         de: { state: true },
         en: { state: true }
       },
-      labels: []
+      labels: [], // ids
+      labels_states: {}
     },
     mutations: {
       SET_USER (state, user) {
@@ -26,7 +27,8 @@ const createStore = () => {
         state.language_states[lang].state = false
       },
       SET_LABELS (state, labels) {
-        state.labels = labels || []
+        state.labels = labels.ids || []
+        state.labels_states = labels.states || {}
       }
     },
     getters: {
@@ -41,6 +43,9 @@ const createStore = () => {
       },
       allLabels (state) {
         return state.labels
+      },
+      allLabelStates (state) {
+        return state.labels_states
       },
       allLanguages (state) {
         return state.languages
@@ -60,6 +65,19 @@ const createStore = () => {
       },
       disableLanguage ({ commit }, lang) {
         commit('DISABLE_LANGUAGE', lang)
+      },
+      /*
+       * get a list of item objects and reduce it into two structures:
+       * a list of the ids and a dict with the label id as key
+       */
+      setLabels ({ commit }, items) {
+        const labels = items.reduce((acc, item) => {
+          acc.ids.push(item.id)
+          acc.states[item.id] = item
+          return acc
+        }, { ids: [], states: {} })
+
+        commit('SET_LABELS', labels)
       }
     }
   })
