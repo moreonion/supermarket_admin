@@ -67,7 +67,7 @@ module.exports = {
     '@nuxtjs/axios'
   ],
   axios: {
-    browserBaseURL: 'https://api.supplychainge.org/api/v1',
+    browserBaseURL: process.env.API_BASE_URL || 'https://api.supplychainge.org/api/v1',
     credentials: false
   }
 }
