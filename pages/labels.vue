@@ -39,11 +39,16 @@
                           placeholder="Label name"
             ></b-form-input>
           </b-form-group>
-          <b-form-select id="label-type" class="mb-2"
-                         type="text" v-model="form.type" required
-                         :options="spec.type.options"
-                         placeholder="Logo URL"
-          ></b-form-select>
+          <b-form-group id="group-type"
+                        description="The label type."
+                        label="Label type"
+          >
+            <b-form-select id="label-type" class="mb-2"
+                           type="text" v-model="form.type" required
+                           :options="spec.type.options"
+                           placeholder="Logo URL"
+            ></b-form-select>
+          </b-form-group>
           <b-form-group id="group-logo"
                         description="A URL to a logo for the label."
                         label="Logo URL"
@@ -53,11 +58,16 @@
                           placeholder="Logo URL"
             ></b-form-input>
           </b-form-group>
-          <b-form-textarea id="label-description" class="mb-2"
-                           type="text" v-model="form.description.de"
-                           placeholder="Description"
-                           rows="3"
-          ></b-form-textarea>
+          <b-form-group id="group-description"
+                        description="A description for the label."
+                        label="Description"
+          >
+            <b-form-textarea id="label-description"
+                             type="text" v-model="form.description.de"
+                             placeholder="Description"
+                             rows="3"
+            ></b-form-textarea>
+          </b-form-group>
           <b-form-textarea id="label-details" class="mb-2"
                            type="text" v-model="form.details"
                            placeholder="Details"
