@@ -38,6 +38,7 @@ export default {
       let user = jwtDecode(authResult.idToken)
       setAuth(authResult.accessToken, user)
       this.$store.commit('SET_USER', user)
+      this.$store.commit('SET_ACCESS_TOKEN', authResult.accessToken)
 
       this.$router.replace('/home')
     })

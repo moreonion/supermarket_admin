@@ -23,6 +23,11 @@ export const getUserFromLocalStorage = () => {
   return json ? JSON.parse(json) : null
 }
 
+export const getAccessTokenFromLocalStorage = () => {
+  const token = window.localStorage.access_token
+  return token ? token : null // eslint-disable-line no-unneeded-ternary
+}
+
 export const createWebAuth = () => {
   return new auth0.WebAuth(
     {

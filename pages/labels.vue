@@ -101,7 +101,7 @@ import { t, NotificationMixin } from '~/utils/utils'
 export default {
   mixins: [ NotificationMixin ],
   middleware: 'authenticated',
-  computed: mapGetters(['allLabels', 'config']),
+  computed: mapGetters(['allLabels', 'config', 'accessToken']),
   data () {
     return {
       spec: {
@@ -135,8 +135,7 @@ export default {
   methods: {
     t,
     postNewLabel (newLabel) {
-      const token = window.localStorage.getItem('access_token')
-      const authenticationHeader = { 'Authorization': `Bearer ${token}` }
+      const authenticationHeader = { 'Authorization': `Bearer ${this.accessToken}` }
       this.$axios.post('/labels', newLabel, {
         headers: { ...authenticationHeader }
       })

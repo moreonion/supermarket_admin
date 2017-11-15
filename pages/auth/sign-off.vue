@@ -15,6 +15,7 @@ export default {
   mounted () {
     unsetAuth()
     this.$store.commit('SET_USER', null)
+    this.$store.commit('SET_ACCESS_TOKEN', null)
     logoutRedirect()
   }
 }
