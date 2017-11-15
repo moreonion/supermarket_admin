@@ -82,11 +82,6 @@
               ></b-form-textarea>
             </div>
           </b-form-group>
-          <b-form-textarea id="label-details" class="mb-2"
-                           type="text" v-model="form.details"
-                           placeholder="Details"
-                           rows="3"
-          ></b-form-textarea>
 
           <div class="my-3">
             <b-btn type="submit" size="lg" class="ml-2 float-right" variant="primary">Submit</b-btn>
@@ -110,8 +105,7 @@ const defaultFormData = {
   name: {}, // translated
   type: 'product', // default
   logo: {}, // translated
-  description: {}, // translated
-  details: '' // JSON
+  description: {} // translated
 }
 
 export default {
