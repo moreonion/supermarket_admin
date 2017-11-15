@@ -26,7 +26,7 @@
         </tbody>
       </table>
 
-      <b-modal id="label-form" title="New Label">
+      <b-modal id="label-form" title="New Label" size="lg">
         <p class="mb-2">Create a new label</p>
 
         <b-form @submit.prevent="onSubmit" novalidate>
