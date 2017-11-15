@@ -4,6 +4,9 @@ const createStore = () => {
   return new Vuex.Store({
     state: {
       user: null,
+      config: {
+        languages: ['de', 'en']
+      },
       labels: []
     },
     mutations: {
@@ -23,6 +26,9 @@ const createStore = () => {
       },
       allLabels (state) {
         return state.labels
+      },
+      config (state) {
+        return state.config
       }
     }
   })

@@ -34,10 +34,14 @@
                         description="The name of the label"
                         label="Label name"
           >
-            <b-form-input id="label-name" class="mb-2"
-                          type="text" v-model.trim="form.name.de" required
-                          placeholder="Label name"
-            ></b-form-input>
+            <div class="input-group mb-2" v-for="lang in config.languages" :key="lang">
+              <span class="input-group-addon">{{ lang }}</span>
+              <b-form-input
+                            :id="`label-name-${lang}`"
+                            type="text" v-model="form.name[lang]" required
+                            placeholder="Label name"
+              ></b-form-input>
+            </div>
           </b-form-group>
           <b-form-group id="group-type"
                         description="The label type."
@@ -53,20 +57,26 @@
                         description="A URL to a logo for the label."
                         label="Logo URL"
           >
-            <b-form-input id="label-logo" class="mb-2"
-                          type="url" v-model="form.logo.de"
-                          placeholder="Logo URL"
-            ></b-form-input>
+            <div class="input-group mb-2" v-for="lang in config.languages" :key="lang">
+              <span class="input-group-addon">{{ lang }}</span>
+              <b-form-input :id="`label-logo-${lang}`"
+                            type="url" v-model="form.logo[lang]"
+                            placeholder="Logo URL"
+              ></b-form-input>
+            </div>
           </b-form-group>
           <b-form-group id="group-description"
                         description="A description for the label."
                         label="Description"
           >
-            <b-form-textarea id="label-description"
-                             type="text" v-model="form.description.de"
-                             placeholder="Description"
-                             rows="3"
-            ></b-form-textarea>
+            <div class="input-group mb-2" v-for="lang in config.languages" :key="lang">
+              <span class="input-group-addon">{{ lang }}</span>
+              <b-form-textarea id="`label-description-${lang}`"
+                               type="text" v-model="form.description[lang]"
+                               placeholder="Description"
+                               rows="3"
+              ></b-form-textarea>
+            </div>
           </b-form-group>
           <b-form-textarea id="label-details" class="mb-2"
                            type="text" v-model="form.details"
@@ -91,7 +101,7 @@ import { t, NotificationMixin } from '~/utils/utils'
 export default {
   mixins: [ NotificationMixin ],
   middleware: 'authenticated',
-  computed: mapGetters(['allLabels']),
+  computed: mapGetters(['allLabels', 'config']),
   data () {
     return {
       spec: {
@@ -103,17 +113,11 @@ export default {
         }
       },
       form: {
-        name: {
-          de: ''
-        },
+        name: {}, // translated
         type: 'product', // default
-        logo: {
-          de: ''
-        },
-        description: {
-          de: ''
-        },
-        details: ''
+        logo: {}, // translated
+        description: {}, // translated
+        details: '' // JSON
       }
     }
   },
@@ -158,3 +162,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.input-group-addon {
+  align-items: baseline;
+}
+</style>
