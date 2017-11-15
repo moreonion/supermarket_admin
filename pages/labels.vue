@@ -29,12 +29,16 @@
       <b-modal id="label-form" title="New Label" size="lg">
         <p class="mb-2">Create a new label</p>
 
+        <div class="container mb-3 text-right">
+          <language-enabler/>
+        </div>
+
         <b-form @submit.prevent="onSubmit" novalidate>
           <b-form-group id="group-name"
                         description="The name of the label"
                         label="Label name"
           >
-            <div class="input-group mb-2" v-for="lang in config.languages" :key="lang">
+            <div class="input-group mb-2" v-for="lang in allEnabledLanguages" :key="lang">
               <span class="input-group-addon">{{ lang }}</span>
               <b-form-input
                             :id="`label-name-${lang}`"
@@ -57,7 +61,7 @@
                         description="A URL to a logo for the label."
                         label="Logo URL"
           >
-            <div class="input-group mb-2" v-for="lang in config.languages" :key="lang">
+            <div class="input-group mb-2" v-for="lang in allEnabledLanguages" :key="lang">
               <span class="input-group-addon">{{ lang }}</span>
               <b-form-input :id="`label-logo-${lang}`"
                             type="url" v-model="form.logo[lang]"
@@ -69,7 +73,7 @@
                         description="A description for the label."
                         label="Description"
           >
-            <div class="input-group mb-2" v-for="lang in config.languages" :key="lang">
+            <div class="input-group mb-2" v-for="lang in allEnabledLanguages" :key="lang">
               <span class="input-group-addon">{{ lang }}</span>
               <b-form-textarea id="`label-description-${lang}`"
                                type="text" v-model="form.description[lang]"
@@ -96,12 +100,16 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import LanguageEnabler from '~/components/LanguageEnabler'
 import { t, NotificationMixin } from '~/utils/utils'
 
 export default {
   mixins: [ NotificationMixin ],
+  components: {
+    LanguageEnabler
+  },
   middleware: 'authenticated',
-  computed: mapGetters(['allLabels', 'config', 'accessToken']),
+  computed: mapGetters(['allLabels', 'allEnabledLanguages', 'accessToken']),
   data () {
     return {
       spec: {

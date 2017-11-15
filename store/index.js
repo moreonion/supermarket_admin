@@ -5,8 +5,10 @@ const createStore = () => {
     state: {
       user: null,
       access_token: null,
-      config: {
-        languages: ['de', 'en']
+      languages: [ 'de', 'en' ],
+      language_states: {
+        de: { state: true },
+        en: { state: true }
       },
       labels: []
     },
@@ -16,6 +18,12 @@ const createStore = () => {
       },
       SET_ACCESS_TOKEN (state, token) {
         state.access_token = token || null
+      },
+      ENABLE_LANGUAGE (state, lang) {
+        state.language_states[lang].state = true
+      },
+      DISABLE_LANGUAGE (state, lang) {
+        state.language_states[lang].state = false
       },
       SET_LABELS (state, labels) {
         state.labels = labels || []
@@ -34,8 +42,24 @@ const createStore = () => {
       allLabels (state) {
         return state.labels
       },
-      config (state) {
-        return state.config
+      allLanguages (state) {
+        return state.languages
+      },
+      allEnabledLanguages (state) {
+        return state.languages.reduce((languages, item) => {
+          if (state.language_states[item].state) {
+            languages.push(item)
+          }
+          return languages
+        }, [])
+      }
+    },
+    actions: {
+      enableLanguage ({ commit }, lang) {
+        commit('ENABLE_LANGUAGE', lang)
+      },
+      disableLanguage ({ commit }, lang) {
+        commit('DISABLE_LANGUAGE', lang)
       }
     }
   })
