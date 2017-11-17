@@ -11,6 +11,9 @@
         </div>
       </div>
 
+      <b-pagination-nav size="md" use-route :link-gen="linkGen" :number-of-pages="itemsPages" v-model="currentPage">
+      </b-pagination-nav>
+
       <table class="table">
         <thead>
           <tr>
@@ -119,6 +122,9 @@ export default {
   computed: mapGetters(['allLabels', 'allLabelStates', 'allEnabledLanguages', 'accessToken']),
   data () {
     return {
+      currentPage: 1,
+      itemsPages: 1,
+      itemsPageLimit: 10,
       currentAction: 'create', // or 'edit'
       currentFormId: null, // or an ID of a label being edited
       editableFields: ['name', 'description', 'logo', 'type'],
@@ -136,21 +142,34 @@ export default {
     }
   },
   mounted () {
-    this.fetchLabels()
+    // read page num from route if given
+    if (this.$route.query.page) {
+      this.currentPage = parseInt(this.$route.query.page)
+    }
+
+    this.fetchLabels(this.currentPage)
   },
   methods: {
     ...mapActions(['setLabels']),
+    /**
+     * generate links for <b-pagination-nav>
+     */
+    linkGen (pageNum) {
+      return { path: '', query: { page: pageNum } }
+    },
     t,
     /*
      * call the API for some labels, then let the store action `setLabels` deal
      * with reducing the response and storing the items
      */
-    fetchLabels () {
-      this.$axios.get('/labels')
+    fetchLabels (pageNum = 1) {
+      this.$axios.get(`/labels?limit=${this.itemsPageLimit}&page=${pageNum}&sort=id`)
         .then((resp) => {
-          console.log('success: fetching labels')
+          console.log(`success: fetching labels page ${pageNum}`)
           this.showFetchSuccess()
 
+          this.currentPage = parseInt(resp.data.pages.current)
+          this.itemsPages = parseInt(resp.data.pages.total)
           this.setLabels(resp.data.items)
         })
         .catch((err) => {
