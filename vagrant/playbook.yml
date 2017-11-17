@@ -19,12 +19,16 @@
       with_items:
         - libc-ares2
 
-    # nuxt needs node 6
-    - name: install node from sid
-      apt: deb=http://ftp.de.debian.org/debian/pool/main/n/nodejs/nodejs_6.11.4~dfsg-1_amd64.deb state=present install_recommends=no
+    # key: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    # sha256sum: 773b328f7b1d6db58a8c6a7fc89e2ed58ac5e06c3ab148411cf8272be7b1c472
+    # see: https://deb.nodesource.com/setup_8.x
+    - name: add nodesource apt-key
+      apt_key: data={{ lookup('file', 'nodesource-repository.asc') }} state=present
+      register: nodesource_apt_key
 
-    - name: alternative /usr/bin/node
-      alternatives: name=node link=/usr/bin/node path=/usr/bin/nodejs
+    - name: add nodesource repository
+      apt_repository: repo='deb https://deb.nodesource.com/node_8.x {{ ansible_lsb.codename }} main' state=present filename='nodesource'
+      register: nodesource_apt_repository
 
     # key: https://dl.yarnpkg.com/debian/pubkey.gpg
     # sha256sum: 9d9139d2e2075665ef35bdb6f32f750918fe18ce1c904d9316a42f614179daea
@@ -38,15 +42,13 @@
 
     - name: update apt cache
       apt: update_cache=yes
-      when: yarn_apt_key.changed or yarn_apt_repository.changed
+      when: nodesource_apt_key.changed or nodesource_apt_repository.changed or yarn_apt_key.changed or yarn_apt_repository.changed
 
-    - name: install yarn
+    - name: install nodejs and yarn
       apt: state=latest name={{ item }} install_recommends=no
       with_items:
+        - nodejs
         - yarn
-
-    - name: yarn provides /usr/bin/npm
-      alternatives: name=npm link=/usr/bin/npm path=/usr/bin/yarn
 
     - name: install SASS
       apt: state=latest name={{ item }} install_recommends=no
