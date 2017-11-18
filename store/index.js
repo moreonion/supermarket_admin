@@ -11,7 +11,20 @@ const createStore = () => {
         en: { state: true }
       },
       labels: [], // ids
-      labels_states: {}
+      labels_states: {},
+      // for the column display
+      label_columns: ['id', 'name', 'hotspots', 'resources', 'credibility', 'environment', 'social', 'animal', 'countries'],
+      label_column_states: {
+        id: { state: true, order: 'asc' },
+        name: { state: true, order: 'asc' },
+        hotspots: { state: true, order: 'asc' },
+        resources: { state: true, order: 'asc' },
+        credibility: { state: true, order: 'asc' },
+        environment: { state: true, order: 'asc' },
+        social: { state: true, order: 'asc' },
+        animal: { state: true, order: 'asc' },
+        countries: { state: true, order: 'asc' }
+      }
     },
     mutations: {
       SET_USER (state, user) {
@@ -25,6 +38,12 @@ const createStore = () => {
       },
       DISABLE_LANGUAGE (state, lang) {
         state.language_states[lang].state = false
+      },
+      ENABLE_LABEL_TABLE_COLUMN (state, name) {
+        state.label_column_states[name].state = true
+      },
+      DISABLE_LABEL_TABLE_COLUMN (state, name) {
+        state.label_column_states[name].state = false
       },
       SET_LABELS (state, labels) {
         state.labels = labels.ids || []
@@ -41,11 +60,27 @@ const createStore = () => {
       accessToken (state) {
         return state.access_token
       },
+      // labels
       allLabels (state) {
         return state.labels
       },
       allLabelStates (state) {
         return state.labels_states
+      },
+      // label columns
+      allLabelColumns (state) {
+        return state.label_columns
+      },
+      allLabelColumnStates (state) {
+        return state.label_column_states
+      },
+      allEnabledLabelColumns (state) {
+        return state.label_columns.reduce((columns, item) => {
+          if (state.label_column_states[item].state) {
+            columns.push(item)
+          }
+          return columns
+        }, [])
       },
       allLanguages (state) {
         return state.languages
@@ -65,6 +100,12 @@ const createStore = () => {
       },
       disableLanguage ({ commit }, lang) {
         commit('DISABLE_LANGUAGE', lang)
+      },
+      enableLabelTableColumn ({ commit }, name) {
+        commit('ENABLE_LABEL_TABLE_COLUMN', name)
+      },
+      disableLabelTableColumn ({ commit }, name) {
+        commit('DISABLE_LABEL_TABLE_COLUMN', name)
       },
       /*
        * get a list of item objects and reduce it into two structures:

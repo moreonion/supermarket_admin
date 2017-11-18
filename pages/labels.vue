@@ -8,6 +8,7 @@
       <div class="container mb-3">
         <div class="btn-group">
           <b-btn class="btn btn-outline-primary" v-b-modal.label-form>New</b-btn>
+          <b-btn class="btn btn-outline-primary" v-b-modal.label-filter>Filter</b-btn>
         </div>
       </div>
 
@@ -17,15 +18,13 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Name</th>
+            <th v-for="column in allEnabledLabelColumns" scope="col" :key="column">{{ column }}</th>
             <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="label in allLabels" :key="label">
-            <td>{{ label }}</td>
-            <td>{{ t(allLabelStates[label].name) }}</td>
+            <td v-for="column in allEnabledLabelColumns">{{ getValueFor(allLabelStates[label], column) }}</td>
             <td><b-btn size="sm" variant="outline-primary" @click="showEditModal(label)">Edit</b-btn></td>
           </tr>
         </tbody>
@@ -95,6 +94,10 @@
           </div>
         </b-form>
       </b-modal>
+
+      <b-modal ref="labelFilterModal" id="label-filter" title="Filter label columns" size="lg">
+        <table-columns-filter/>
+      </b-modal>
     </div>
   </section>
 </template>
@@ -102,7 +105,12 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import LanguageEnabler from '~/components/LanguageEnabler'
+import TableColumnsFilter from '~/components/TableColumnsFilter'
 import { t, NotificationMixin } from '~/utils/utils'
+import LabelApiMappings from '~/config/labels'
+
+// for access resolving strings to objects paths
+import ObjectPath from 'object-path'
 
 // copy with `JSON.parse(JSON.stringify(defaultFormData))`
 // to prevent setting references to this "immutable" object
@@ -116,10 +124,11 @@ const defaultFormData = {
 export default {
   mixins: [ NotificationMixin ],
   components: {
-    LanguageEnabler
+    LanguageEnabler,
+    TableColumnsFilter
   },
   middleware: 'authenticated',
-  computed: mapGetters(['allLabels', 'allLabelStates', 'allEnabledLanguages', 'accessToken']),
+  computed: mapGetters(['allLabels', 'allLabelStates', 'allEnabledLanguages', 'accessToken', 'allEnabledLabelColumns']),
   data () {
     return {
       currentPage: 1,
@@ -158,6 +167,10 @@ export default {
       return { path: '', query: { page: pageNum } }
     },
     t,
+    getValueFor (label, name) {
+      const valuePath = LabelApiMappings.columnValueMap[name]
+      return ObjectPath.get(label, valuePath)
+    },
     /*
      * call the API for some labels, then let the store action `setLabels` deal
      * with reducing the response and storing the items

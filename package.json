@@ -24,6 +24,7 @@
     "auth0-js": "^8.10.1",
     "jwt-decode": "^2.2.0",
     "nuxt": "^1.0.0-rc11",
+    "object-path": "^0.11.4",
     "vue-notifications": "^0.9.0"
   },
   "devDependencies": {
