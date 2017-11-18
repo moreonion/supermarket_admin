@@ -128,7 +128,13 @@ export default {
     TableColumnsFilter
   },
   middleware: 'authenticated',
-  computed: mapGetters(['allLabels', 'allLabelStates', 'allEnabledLanguages', 'accessToken', 'allEnabledLabelColumns']),
+  computed: mapGetters({
+    accessToken: 'accessToken',
+    allLabels: 'labels/allLabels',
+    allLabelStates: 'labels/allLabelStates',
+    allEnabledLanguages: 'languages/allEnabledLanguages',
+    allEnabledLabelColumns: 'labels/allEnabledLabelColumns'
+  }),
   data () {
     return {
       currentPage: 1,
@@ -159,7 +165,9 @@ export default {
     this.fetchLabels(this.currentPage)
   },
   methods: {
-    ...mapActions(['setLabels']),
+    ...mapActions({
+      setLabels: 'labels/setLabels'
+    }),
     /**
      * generate links for <b-pagination-nav>
      */

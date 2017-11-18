@@ -14,13 +14,13 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   computed: mapGetters({
-    allTableColumnsOrdered: 'allLabelColumns',
-    allTableColumnsStates: 'allLabelColumnStates'
+    allTableColumnsOrdered: 'labels/allLabelColumns',
+    allTableColumnsStates: 'labels/allLabelColumnStates'
   }),
   methods: {
     ...mapActions({
-      enableTableColumn: 'enableLabelTableColumn',
-      disableTableColumn: 'disableLabelTableColumn'
+      enableTableColumn: 'labels/enableLabelTableColumn',
+      disableTableColumn: 'labels/disableLabelTableColumn'
     }),
     isEnabledTableColumn (name) {
       return this.allTableColumnsStates[name].state

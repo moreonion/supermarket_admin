@@ -10,9 +10,15 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  computed: mapGetters(['allLanguages', 'allEnabledLanguages']),
+  computed: mapGetters({
+    allLanguages: 'languages/allLanguages',
+    allEnabledLanguages: 'languages/allEnabledLanguages'
+  }),
   methods: {
-    ...mapActions(['enableLanguage', 'disableLanguage']),
+    ...mapActions({
+      enableLanguage: 'languages/enableLanguage',
+      disableLanguage: 'languages/disableLanguage'
+    }),
     isEnabledLanguage (lang) {
       return this.allEnabledLanguages.indexOf(lang) === -1 ? false : true // eslint-disable-line no-unneeded-ternary
     },
