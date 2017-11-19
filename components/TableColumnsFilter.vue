@@ -1,9 +1,9 @@
 <template>
   <div>
-    <b-form-checkbox v-for="name in allTableColumnsOrdered" :key="name"
+    <b-form-checkbox v-for="name in orderedColumns" :key="name"
                      :id="`checkbox-${name}`"
-                     :checked="isEnabledTableColumn(name)"
-                     @input="toggleTableColumn(name)">
+                     :checked="isEnabledColumn(name)"
+                     @input="toggleColumn(name)">
       {{ name }}
     </b-form-checkbox>
   </div>
@@ -14,20 +14,19 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   computed: mapGetters({
-    allTableColumnsOrdered: 'labels/allLabelColumns',
-    allTableColumnsStates: 'labels/allLabelColumnStates'
+    orderedColumns: 'labels/columns',
+    columnStates: 'labels/columnStates'
   }),
   methods: {
     ...mapActions({
-      enableTableColumn: 'labels/enableLabelTableColumn',
-      disableTableColumn: 'labels/disableLabelTableColumn'
+      enableColumn: 'labels/enableColumn',
+      disableColumn: 'labels/disableColumn'
     }),
-    isEnabledTableColumn (name) {
-      return this.allTableColumnsStates[name].state
+    isEnabledColumn (name) {
+      return this.columnStates[name].state
     },
-    toggleTableColumn (name) {
-      console.log(name)
-      this.isEnabledTableColumn(name) ? this.disableTableColumn(name) : this.enableTableColumn(name)
+    toggleColumn (name) {
+      this.isEnabledColumn(name) ? this.disableColumn(name) : this.enableColumn(name)
     }
   }
 }

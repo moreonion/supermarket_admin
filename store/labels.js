@@ -2,8 +2,8 @@ export const state = () => ({
   labels: [], // ids
   labels_states: {},
   // for the column display
-  label_columns: ['id', 'name', 'hotspots', 'resources', 'credibility', 'environment', 'social', 'animal', 'countries'],
-  label_column_states: {
+  columns: ['id', 'name', 'hotspots', 'resources', 'credibility', 'environment', 'social', 'animal', 'countries'],
+  column_states: {
     id: { state: true, order: 'asc' },
     name: { state: true, order: 'asc' },
     hotspots: { state: true, order: 'asc' },
@@ -17,11 +17,11 @@ export const state = () => ({
 })
 
 export const mutations = {
-  ENABLE_LABEL_TABLE_COLUMN (state, name) {
-    state.label_column_states[name].state = true
+  ENABLE_COLUMN (state, name) {
+    state.column_states[name].state = true
   },
-  DISABLE_LABEL_TABLE_COLUMN (state, name) {
-    state.label_column_states[name].state = false
+  DISABLE_COLUMN (state, name) {
+    state.column_states[name].state = false
   },
   SET_LABELS (state, labels) {
     state.labels = labels.ids || []
@@ -31,22 +31,22 @@ export const mutations = {
 
 export const getters = {
   // labels
-  allLabels (state) {
+  labels (state) {
     return state.labels
   },
-  allLabelStates (state) {
+  labelStates (state) {
     return state.labels_states
   },
   // label columns
-  allLabelColumns (state) {
-    return state.label_columns
+  columns (state) {
+    return state.columns
   },
-  allLabelColumnStates (state) {
-    return state.label_column_states
+  columnStates (state) {
+    return state.column_states
   },
-  allEnabledLabelColumns (state) {
-    return state.label_columns.reduce((columns, item) => {
-      if (state.label_column_states[item].state) {
+  enabledColumns (state) {
+    return state.columns.reduce((columns, item) => {
+      if (state.column_states[item].state) {
         columns.push(item)
       }
       return columns
@@ -55,11 +55,11 @@ export const getters = {
 }
 
 export const actions = {
-  enableLabelTableColumn ({ commit }, name) {
-    commit('ENABLE_LABEL_TABLE_COLUMN', name)
+  enableColumn ({ commit }, name) {
+    commit('ENABLE_COLUMN', name)
   },
-  disableLabelTableColumn ({ commit }, name) {
-    commit('DISABLE_LABEL_TABLE_COLUMN', name)
+  disableColumn ({ commit }, name) {
+    commit('DISABLE_COLUMN', name)
   },
   /*
    * get a list of item objects and reduce it into two structures:

@@ -130,10 +130,10 @@ export default {
   middleware: 'authenticated',
   computed: mapGetters({
     accessToken: 'accessToken',
-    allLabels: 'labels/allLabels',
-    allLabelStates: 'labels/allLabelStates',
+    allLabels: 'labels/labels',
+    allLabelStates: 'labels/labelStates',
     allEnabledLanguages: 'languages/allEnabledLanguages',
-    allEnabledLabelColumns: 'labels/allEnabledLabelColumns'
+    allEnabledLabelColumns: 'labels/enabledColumns'
   }),
   data () {
     return {
