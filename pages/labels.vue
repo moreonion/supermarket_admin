@@ -192,19 +192,26 @@ export default {
      * with reducing the response and storing the items
      */
     fetchLabels (pageNum = 1) {
-      this.$axios.get(`/labels?limit=${this.itemsPageLimit}&page=${pageNum}&sort=id`)
-        .then((resp) => {
-          console.log(`success: fetching labels page ${pageNum}`)
-          this.showFetchSuccess()
+      this.$supermarket.query('labels',
+        {
+          params: {
+            limit: this.itemsPageLimit,
+            page: pageNum,
+            sort: 'id'
+          }
+        },
+        this.allEnabledLabelColumns
+      ).then((resp) => {
+        console.log(`success: fetching labels page ${pageNum}`)
+        this.showFetchSuccess()
 
-          this.currentPage = parseInt(resp.data.pages.current)
-          this.itemsPages = parseInt(resp.data.pages.total)
-          this.setLabels(resp.data.items)
-        })
-        .catch((err) => {
-          console.log(err.response)
-          this.showFetchError(err)
-        })
+        this.currentPage = parseInt(resp.data.pages.current)
+        this.itemsPages = parseInt(resp.data.pages.total)
+        this.setLabels(resp.data.items)
+      }).catch((err) => {
+        console.log(err.response)
+        this.showFetchError(err)
+      })
     },
     resetFormData (newLabel) {
       console.log(defaultFormData)
