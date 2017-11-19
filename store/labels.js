@@ -38,7 +38,7 @@ export const getters = {
     return state.labels_states
   },
   // label columns
-  columns (state) {
+  orderedColumns (state) {
     return state.columns
   },
   columnStates (state) {
@@ -51,6 +51,11 @@ export const getters = {
       }
       return columns
     }, [])
+  },
+  isEnabledColumn (state, getters) {
+    return name => {
+      return getters.enabledColumns.indexOf(name) !== -1
+    }
   }
 }
 
@@ -60,6 +65,9 @@ export const actions = {
   },
   disableColumn ({ commit }, name) {
     commit('DISABLE_COLUMN', name)
+  },
+  toggleColumn ({ commit, getters }, name) {
+    getters.isEnabledColumn(name) ? commit('DISABLE_COLUMN', name) : commit('ENABLE_COLUMN', name)
   },
   /*
    * get a list of item objects and reduce it into two structures:
