@@ -26,7 +26,7 @@
           <tr v-for="label in allLabels" :key="label">
             <td v-for="column in allEnabledLabelColumns">
               <div v-if="column === 'name'">
-                <translated-text include-label :translations="getValueFor(allLabelStates[label], column)"/>
+                <translated-text include-label display-missing :translations="getValueFor(allLabelStates[label], column)"/>
               </div>
               <div v-else>
                 {{ getValueFor(allLabelStates[label], column) }}
@@ -114,7 +114,7 @@ import { mapGetters, mapActions } from 'vuex'
 import LanguageEnabler from '~/components/LanguageEnabler'
 import TableColumnsFilter from '~/components/TableColumnsFilter'
 import TranslatedText from '~/components/TranslatedText'
-import { t, NotificationMixin } from '~/utils/utils'
+import { NotificationMixin } from '~/utils/utils'
 import LabelApiMappings from '~/config/labels'
 
 // for access resolving strings to objects paths
@@ -183,7 +183,6 @@ export default {
     linkGen (pageNum) {
       return { path: '', query: { page: pageNum } }
     },
-    t,
     getValueFor (label, name) {
       const valuePath = LabelApiMappings.columnValueMap[name]
       return ObjectPath.get(label, valuePath)
