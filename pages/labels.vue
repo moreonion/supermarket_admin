@@ -24,7 +24,14 @@
         </thead>
         <tbody>
           <tr v-for="label in allLabels" :key="label">
-            <td v-for="column in allEnabledLabelColumns">{{ getValueFor(allLabelStates[label], column) }}</td>
+            <td v-for="column in allEnabledLabelColumns">
+              <div v-if="column === 'name'">
+                <translated-text include-label :translations="getValueFor(allLabelStates[label], column)"/>
+              </div>
+              <div v-else>
+                {{ getValueFor(allLabelStates[label], column) }}
+              </div>
+            </td>
             <td><b-btn size="sm" variant="outline-primary" @click="showEditModal(label)">Edit</b-btn></td>
           </tr>
         </tbody>
@@ -106,6 +113,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import LanguageEnabler from '~/components/LanguageEnabler'
 import TableColumnsFilter from '~/components/TableColumnsFilter'
+import TranslatedText from '~/components/TranslatedText'
 import { t, NotificationMixin } from '~/utils/utils'
 import LabelApiMappings from '~/config/labels'
 
@@ -125,7 +133,8 @@ export default {
   mixins: [ NotificationMixin ],
   components: {
     LanguageEnabler,
-    TableColumnsFilter
+    TableColumnsFilter,
+    TranslatedText
   },
   middleware: 'authenticated',
   computed: mapGetters({
