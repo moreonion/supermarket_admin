@@ -42,7 +42,7 @@
                         description="The name of the label"
                         label="Label name"
           >
-            <div class="input-group mb-2" v-for="lang in allEnabledLanguages" :key="lang">
+            <div class="input-group mb-2" v-for="lang in enabledLanguages" :key="lang">
               <span class="input-group-addon">{{ lang }}</span>
               <b-form-input
                             :id="`label-name-${lang}`"
@@ -65,7 +65,7 @@
                         description="A URL to a logo for the label."
                         label="Logo URL"
           >
-            <div class="input-group mb-2" v-for="lang in allEnabledLanguages" :key="lang">
+            <div class="input-group mb-2" v-for="lang in enabledLanguages" :key="lang">
               <span class="input-group-addon">{{ lang }}</span>
               <b-form-input :id="`label-logo-${lang}`"
                             type="url" v-model="form.logo[lang]"
@@ -77,7 +77,7 @@
                         description="A description for the label."
                         label="Description"
           >
-            <div class="input-group mb-2" v-for="lang in allEnabledLanguages" :key="lang">
+            <div class="input-group mb-2" v-for="lang in enabledLanguages" :key="lang">
               <span class="input-group-addon">{{ lang }}</span>
               <b-form-textarea id="`label-description-${lang}`"
                                type="text" v-model="form.description[lang]"
@@ -132,7 +132,7 @@ export default {
     accessToken: 'accessToken',
     allLabels: 'labels/labels',
     allLabelStates: 'labels/labelStates',
-    allEnabledLanguages: 'languages/allEnabledLanguages',
+    enabledLanguages: 'languages/enabledLanguages',
     allEnabledLabelColumns: 'labels/enabledColumns'
   }),
   data () {
