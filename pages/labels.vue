@@ -5,10 +5,16 @@
         Labels
       </h1>
 
-      <div class="container mb-3">
-        <div class="btn-group">
-          <b-btn class="btn btn-outline-primary" v-b-modal.label-form>New</b-btn>
-          <b-btn class="btn btn-outline-primary" v-b-modal.label-filter>Filter</b-btn>
+      <div class="row mb-3">
+        <div class="col-sm-6">
+          <div class="btn-group">
+            <b-btn class="btn btn-outline-primary" v-b-modal.label-form>New</b-btn>
+            <b-btn class="btn btn-outline-primary" v-b-modal.label-filter>Filter</b-btn>
+          </div>
+        </div>
+
+        <div class="col-sm-6 text-right">
+          <language-enabler/>
         </div>
       </div>
 
@@ -42,10 +48,6 @@
 
       <b-modal ref="labelFormModal" id="label-form" title="New Label" size="lg" hide-footer>
         <p class="mb-2">Create a new label</p>
-
-        <div class="container mb-3 text-right">
-          <language-enabler/>
-        </div>
 
         <b-form @submit.prevent="onSubmit" novalidate>
           <b-form-group id="group-name"
