@@ -11,7 +11,7 @@
     }
   },
   "scripts": {
-    "dev": "API_BASE_URL=https://supermarket.more-onion.at/api/v1 nuxt",
+    "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate --spa",

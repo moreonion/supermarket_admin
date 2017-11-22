@@ -67,8 +67,7 @@ module.exports = {
     '@nuxtjs/bootstrap-vue',
     '@nuxtjs/axios'
   ],
-  axios: {
-    browserBaseURL: process.env.API_BASE_URL || 'https://api.supplychainge.org/api/v1',
-    credentials: false
+  supermarketApi: {
+    baseURL: 'https://supermarket.more-onion.at/api/v1'
   }
 }

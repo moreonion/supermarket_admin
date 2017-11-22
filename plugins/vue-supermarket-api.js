@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import VueSupermarketApi from '../vue-supermarket-api'
 
+import config from '../nuxt.config.js'
+
 Vue.use(VueSupermarketApi, {
   axios: {
-    baseURL: process.env.API_BASE_URL || 'https://api.supplychainge.org/api/v1/'
+    baseURL: config.supermarketApi.baseURL
   }
 })
