@@ -194,6 +194,10 @@ export default {
       const valuePath = LabelApiMappings.columnValueMap[name]
       return ObjectPath.get(label, valuePath)
     },
+    // return a data object to be consumable by the API
+    buildApiData () {
+      return Object.assign({}, this.form}
+    },
     /*
      * call the API for some labels, then let the store action `setLabels` deal
      * with reducing the response and storing the items
@@ -295,15 +299,17 @@ export default {
       // add class `was-validated` for custom BS4 validations to work
       ev.target.classList.add('was-validated')
 
-      console.log(JSON.stringify(this.form))
+      const data = this.buildApiData()
+
+      console.log(JSON.stringify(data))
 
       if (ev.target.checkValidity()) {
         console.log('valid form')
 
         if (this.currentAction === 'edit') {
-          this.putLabel(this.form, this.currentFormId)
+          this.putLabel(data, this.currentFormId)
         } else {
-          this.postNewLabel(this.form)
+          this.postNewLabel(data)
         }
 
         // reset state
