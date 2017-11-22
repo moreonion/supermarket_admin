@@ -98,6 +98,30 @@
               ></b-form-textarea>
             </div>
           </b-form-group>
+          <b-form-group id="group-criteria"
+                        description="Criteria associated with the label."
+                        label="Criteria"
+          >
+            <div id="label-criteria" v-for="criterion in criterionOptions" :key="criterion.value">
+              <b-form-checkbox v-model="enabled_criteria" :value="criterion.value">
+                {{ criterion.text }}
+              </b-form-checkbox>
+              <div class="ml-4">
+                <div class="input-group mb-2">
+                  <span class="input-group-addon">en</span>
+                  <b-form-input
+                                type="text" v-model="enabled_criteria_measures_explanations[criterion.value]"
+                                placeholder="Explanation"
+                  ></b-form-input>
+                </div>
+              </div>
+              <div v-for="measure in getPossibleMeasureForCriterion(criterion.value)" class="ml-4" :key="measure.value">
+                <b-form-checkbox v-model="enabled_criteria_measures[criterion.value]" :value="measure.value">
+                  {{ measure.text }} (<span class="badge badge-light">{{ measure.value }}</span>)
+                </b-form-checkbox>
+              </div>
+            </div>
+          </b-form-group>
 
           <div class="my-3">
             <b-btn type="submit" size="lg" class="ml-2 float-right" variant="primary">Submit</b-btn>
@@ -128,11 +152,14 @@ import ObjectPath from 'object-path'
 
 // copy with `JSON.parse(JSON.stringify(defaultFormData))`
 // to prevent setting references to this "immutable" object
+//
+// mirros the JSON the API is expecting
 const defaultFormData = {
   name: {}, // translated
   type: 'product', // default
   logo: {}, // translated
-  description: {} // translated
+  description: {}, // translated
+  meets_criteria: [] // objects {'criterion': id, 'score': measure_id, 'explanation': translated string }
 }
 
 export default {
@@ -144,13 +171,31 @@ export default {
     TranslatedTextList
   },
   middleware: 'authenticated',
-  computed: mapGetters({
-    accessToken: 'accessToken',
-    allLabels: 'labels/labels',
-    allLabelStates: 'labels/labelStates',
-    enabledLanguages: 'languages/enabledLanguages',
-    allEnabledLabelColumns: 'labels/enabledColumns'
-  }),
+  computed: {
+    ...mapGetters({
+      accessToken: 'accessToken',
+      allLabels: 'labels/labels',
+      allLabelStates: 'labels/labelStates',
+      enabledLanguages: 'languages/enabledLanguages',
+      allEnabledLabelColumns: 'labels/enabledColumns',
+      allCriteria: 'criteria/criteria',
+      allCriteriaStates: 'criteria/criteriaStates'
+    }),
+    criterionOptions () {
+      return this.allCriteria.map((criterionId) => {
+        return { value: `${criterionId}`, text: this.allCriteriaStates[criterionId]['name'] }
+      })
+    },
+    criterionMeasuresMap () {
+      return this.allCriteria.reduce((acc, criterionId) => {
+        const keys = Object.keys(this.allCriteriaStates[criterionId].details.measures)
+        acc[criterionId] = keys.map((key) => {
+          return { value: key, text: this.allCriteriaStates[criterionId].details.measures[key] }
+        })
+        return acc
+      }, {})
+    }
+  },
   data () {
     return {
       currentPage: 1,
@@ -158,7 +203,13 @@ export default {
       itemsPageLimit: 10,
       currentAction: 'create', // or 'edit'
       currentFormId: null, // or an ID of a label being edited
-      editableFields: ['name', 'description', 'logo', 'type'],
+      editableFields: ['name', 'description', 'logo', 'type', 'meets_criteria'],
+      // decoupled storage because we want to retain state when parent gets disabled
+      // this is relevant for: enabled_criteria, enabled_criteria_measures,
+      // enabled_criteria_measures_explanations
+      enabled_criteria: [], // list
+      enabled_criteria_measures: {}, // map id -> id
+      enabled_criteria_measures_explanations: {}, // map id -> id -> string
       spec: {
         type: {
           options: [
@@ -182,7 +233,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      setLabels: 'labels/setLabels'
+      setLabels: 'labels/setLabels',
+      setCriteria: 'criteria/setCriteria'
     }),
     /**
      * generate links for <b-pagination-nav>
@@ -194,15 +246,76 @@ export default {
       const valuePath = LabelApiMappings.columnValueMap[name]
       return ObjectPath.get(label, valuePath)
     },
+    getPossibleMeasureForCriterion (criterionId) {
+      return this.criterionMeasuresMap[criterionId]
+    },
     // return a data object to be consumable by the API
     buildApiData () {
-      return Object.assign({}, this.form}
+      return Object.assign({}, this.form, {
+        meets_criteria: this.buildMeetsCriteriaMap()
+      })
+    },
+    // only set the keys which have values
+    // returns a list with criteria met
+    // can be used as `meets_criteria` array
+    buildMeetsCriteriaMap () {
+      return this.enabled_criteria.map((item) => {
+        const criteria = {
+          'criterion': item
+        }
+        if (this.enabled_criteria_measures[item]) {
+          criteria['score'] = this.enabled_criteria_measures[item]
+        }
+        if (this.enabled_criteria_measures_explanations[item]) {
+          criteria['explanation'] = { 'en': this.enabled_criteria_measures_explanations[item] }
+        }
+
+        return criteria
+      })
+    },
+    readMeetsCriteriaMap () {
+      this.form.meets_criteria.map((item) => {
+        const criterionId = item.criterion
+        this.enabled_criteria.push(criterionId)
+        if (item.score) {
+          this.enabled_criteria_measures[criterionId] = item.score
+        }
+        if (item.explanation) {
+          this.enabled_criteria_measures_explanations[criterionId] = item.explanation['en']
+        }
+      })
+    },
+    fetchCriteria (pageNum = 1) {
+      this.$supermarket.query('criteria',
+        {
+          params: {
+            limit: 100,
+            page: pageNum,
+            sort: 'id',
+            lang: 'en' // only 'en' for now
+          }
+        },
+        [], // projections
+        {
+          fetchFullModel: true
+        }
+      ).then((resp) => {
+        console.log(`success: fetching critiria page ${pageNum}`)
+        this.showFetchSuccess()
+        this.setCriteria(resp.data.items)
+      }).catch((err) => {
+        console.log(err.response)
+        this.showFetchError(err)
+      })
     },
     /*
      * call the API for some labels, then let the store action `setLabels` deal
      * with reducing the response and storing the items
      */
     fetchLabels (pageNum = 1) {
+      // preload criteria
+      this.fetchCriteria()
+
       this.$supermarket.query('labels',
         {
           params: {
@@ -230,6 +343,9 @@ export default {
     resetFormData (newLabel) {
       console.log(defaultFormData)
       this.form = JSON.parse(JSON.stringify(defaultFormData))
+      this.enabled_criteria = []
+      this.enabled_criteria_measures = {}
+      this.enabled_criteria_measures_explanations = {}
     },
     postNewLabel (newLabel) {
       this.$supermarket.setAuth(this.accessToken)
@@ -281,6 +397,7 @@ export default {
      */
     showEditModal (id) {
       this.form = JSON.parse(JSON.stringify(this.getFilteredLabel(id)))
+      this.readMeetsCriteriaMap()
       this.currentAction = 'edit'
       this.currentFormId = id
       this.showModal()
