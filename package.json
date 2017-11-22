@@ -23,6 +23,7 @@
     "@nuxtjs/bootstrap-vue": "^2.0.4",
     "auth0-js": "^8.10.1",
     "jwt-decode": "^2.2.0",
+    "lodash.forown": "^4.4.0",
     "lodash.merge": "^4.6.0",
     "lodash.uniq": "^4.5.0",
     "nuxt": "^1.0.0-rc11",
