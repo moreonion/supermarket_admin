@@ -228,30 +228,24 @@ export default {
       this.form = JSON.parse(JSON.stringify(defaultFormData))
     },
     postNewLabel (newLabel) {
-      const authenticationHeader = { 'Authorization': `Bearer ${this.accessToken}` }
-      this.$axios.post('/labels', newLabel, {
-        headers: { ...authenticationHeader }
+      this.$supermarket.setAuth(this.accessToken)
+
+      this.$supermarket.create('labels', newLabel).then((resp) => {
+        this.showCreateSuccess()
+      }).catch((err) => {
+        console.log(err.response)
+        this.showCreateError(err)
       })
-        .then((resp) => {
-          this.showCreateSuccess()
-        })
-        .catch((err) => {
-          console.log(err.response)
-          this.showCreateError(err)
-        })
     },
     putLabel (editedLabel, labelId) {
-      const authenticationHeader = { 'Authorization': `Bearer ${this.accessToken}` }
-      this.$axios.put(`/labels/${labelId}`, editedLabel, {
-        headers: { ...authenticationHeader }
+      this.$supermarket.setAuth(this.accessToken)
+
+      this.$supermarket.update('labels', labelId, editedLabel).then((resp) => {
+        this.showCreateSuccess()
+      }).catch((err) => {
+        console.log(err.response)
+        this.showCreateError(err)
       })
-        .then((resp) => {
-          this.showCreateSuccess()
-        })
-        .catch((err) => {
-          console.log(err.response)
-          this.showCreateError(err)
-        })
     },
     /*
      * get a full label from the store
