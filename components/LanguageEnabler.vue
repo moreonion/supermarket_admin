@@ -1,9 +1,9 @@
 <template>
-  <b-button-group size="sm">
-    <b-button v-for="lang in orderedLanguages" @click="toggleLanguage(lang)" :pressed="isEnabledLanguage(lang)" :key="lang">
+  <div>
+    <b-form-checkbox v-for="lang in orderedLanguages" @input="toggleLanguage(lang)" :checked="isEnabledLanguage(lang)" :key="lang">
       {{ lang }}
-    </b-button>
-  </b-button-group>
+    </b-form-checkbox>
+  </div>
 </template>
 
 <script>
