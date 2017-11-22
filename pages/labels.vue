@@ -200,7 +200,10 @@ export default {
             sort: 'id'
           }
         },
-        this.allEnabledLabelColumns
+        this.allEnabledLabelColumns,
+        {
+          fetchFullModel: true
+        }
       ).then((resp) => {
         console.log(`success: fetching labels page ${pageNum}`)
         this.showFetchSuccess()
