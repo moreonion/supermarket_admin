@@ -9,6 +9,15 @@ const defaults = {
   projections: []
 }
 
+const axiosDefaults = {
+  url: '/',
+  method: 'get',
+  params: {
+    page: 1,
+    limit: 10
+  }
+}
+
 /*
  * get columns, read projections for columns and return
  * param strings for the API (to be consumed by axios)
@@ -29,31 +38,24 @@ const projectColumns = (columns) => {
 }
 
 const VueSupermarketApi = {
-  install (Vue, params = {}) {
+  install (Vue, config = {}) {
     // axios params
-    this.params = merge(defaults, params)
+    this.config = merge(defaults, config)
 
     // internal axios instance for calling the supermarket API
-    this.axios = axios.create(this.params.axios)
+    this.axios = axios.create(this.config.axios)
 
     Vue.prototype.$supermarket = {
       // query the API
       // returns a axios Promise
-      query: (endpoint, options = {}, columns = []) => {
-        const defaults = {
-          url: endpoint,
-          method: 'get',
-          params: {
-            page: 1,
-            limit: 10
-          }
-        }
-        const req = merge(defaults, options)
+      query: (endpoint, axiosOptions = {}, columns = []) => {
+        axiosOptions.url = endpoint
+        axiosOptions = merge(axiosDefaults, axiosOptions)
 
         const projectionParams = projectColumns(columns)
-        req.params = merge(req.params, projectionParams)
+        axiosOptions.params = merge(axiosOptions.params, projectionParams)
 
-        return this.axios.request(req)
+        return this.axios.request(axiosOptions)
       },
       // set the authorization header
       // delete the header by setting it to null
