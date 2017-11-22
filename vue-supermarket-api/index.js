@@ -8,16 +8,8 @@ const defaults = {
   axios: {},
   projections: [],
   options: {
-    fetchFullModel: false
-  }
-}
-
-const axiosDefaults = {
-  url: '/',
-  method: 'get',
-  params: {
-    page: 1,
-    limit: 10
+    fetchFullModel: false,
+    accessToken: null
   }
 }
 
@@ -49,10 +41,18 @@ const VueSupermarketApi = {
     this.axios = axios.create(this.config.axios)
 
     Vue.prototype.$supermarket = {
-      // query the API
+      // query the API for a list of items
       // returns a axios Promise
       query: (endpoint, axiosOptions = {}, columns = [], options = {}) => {
-        axiosOptions.url = endpoint
+        const axiosDefaults = {
+          url: endpoint,
+          method: 'get',
+          params: {
+            page: 1,
+            limit: 10
+          }
+        }
+
         axiosOptions = merge(axiosDefaults, axiosOptions)
         options = merge(defaults.options, options)
 
@@ -63,6 +63,50 @@ const VueSupermarketApi = {
         // filtering with `only` is not set
         if (options.fetchFullModel && axiosOptions.params['only']) {
           delete axiosOptions.params['only']
+        }
+
+        return this.axios.request(axiosOptions)
+      },
+      // create a new item
+      // returns a axios Promise
+      create: (endpoint, item, axiosOptions = {}, options = {}) => {
+        const axiosDefaults = {
+          url: endpoint,
+          method: 'post',
+          data: item
+        }
+
+        axiosOptions = merge(axiosDefaults, axiosOptions)
+        options = merge(defaults.options, options)
+
+        if (options.accessToken) {
+          axiosOptions = merge(axiosOptions, {
+            headers: {
+              'Authorization': `Bearer ${options.accessToken}`
+            }
+          })
+        }
+
+        return this.axios.request(axiosOptions)
+      },
+      // create a new item
+      // returns a axios Promise
+      update: (endpoint, itemId, item, axiosOptions = {}, options = {}) => {
+        const axiosDefaults = {
+          url: `${endpoint}/${itemId}`,
+          method: 'put',
+          data: item
+        }
+
+        axiosOptions = merge(axiosDefaults, axiosOptions)
+        options = merge(defaults.options, options)
+
+        if (options.accessToken) {
+          axiosOptions = merge(axiosOptions, {
+            headers: {
+              'Authorization': `Bearer ${options.accessToken}`
+            }
+          })
         }
 
         return this.axios.request(axiosOptions)
