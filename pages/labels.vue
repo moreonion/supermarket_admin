@@ -34,7 +34,7 @@
               <div v-if="column === 'name'">
                 <translated-text include-label display-missing :translations="getValueFor(allLabelStates[label], column)"/>
               </div>
-              <div v-if="['hotspots', 'resources'].includes(column)">
+              <div v-else-if="['hotspots', 'resources'].includes(column)">
                 <translated-text-list include-label display-missing translation-key="name" :translation-list="getValueFor(allLabelStates[label], column)"/>
               </div>
               <div v-else>
