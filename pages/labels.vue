@@ -28,6 +28,9 @@
               <div v-if="column === 'name'">
                 <translated-text include-label display-missing :translations="getValueFor(allLabelStates[label], column)"/>
               </div>
+              <div v-if="['hotspots', 'resources'].includes(column)">
+                <translated-text-list include-label display-missing translation-key="name" :translation-list="getValueFor(allLabelStates[label], column)"/>
+              </div>
               <div v-else>
                 {{ getValueFor(allLabelStates[label], column) }}
               </div>
@@ -114,6 +117,7 @@ import { mapGetters, mapActions } from 'vuex'
 import LanguageEnabler from '~/components/LanguageEnabler'
 import TableColumnsFilter from '~/components/TableColumnsFilter'
 import TranslatedText from '~/components/TranslatedText'
+import TranslatedTextList from '~/components/TranslatedTextList'
 import { NotificationMixin } from '~/utils/utils'
 import LabelApiMappings from '~/config/labels'
 
@@ -134,7 +138,8 @@ export default {
   components: {
     LanguageEnabler,
     TableColumnsFilter,
-    TranslatedText
+    TranslatedText,
+    TranslatedTextList
   },
   middleware: 'authenticated',
   computed: mapGetters({
