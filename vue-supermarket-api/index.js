@@ -6,7 +6,10 @@ import projections from './projections'
 const defaults = {
   // compare to axios.defaults
   axios: {},
-  projections: []
+  projections: [],
+  options: {
+    fetchFullModel: false
+  }
 }
 
 const axiosDefaults = {
@@ -48,12 +51,19 @@ const VueSupermarketApi = {
     Vue.prototype.$supermarket = {
       // query the API
       // returns a axios Promise
-      query: (endpoint, axiosOptions = {}, columns = []) => {
+      query: (endpoint, axiosOptions = {}, columns = [], options = {}) => {
         axiosOptions.url = endpoint
         axiosOptions = merge(axiosDefaults, axiosOptions)
+        options = merge(defaults.options, options)
 
         const projectionParams = projectColumns(columns)
         axiosOptions.params = merge(axiosOptions.params, projectionParams)
+
+        // if we want to fetch the full model we simply have to make sure that
+        // filtering with `only` is not set
+        if (options.fetchFullModel && axiosOptions.params['only']) {
+          delete axiosOptions.params['only']
+        }
 
         return this.axios.request(axiosOptions)
       },
