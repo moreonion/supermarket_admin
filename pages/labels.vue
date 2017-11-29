@@ -150,7 +150,7 @@ import LanguageEnabler from '~/components/LanguageEnabler'
 import TableColumnsFilter from '~/components/TableColumnsFilter'
 import TranslatedText from '~/components/TranslatedText'
 import TranslatedTextList from '~/components/TranslatedTextList'
-import { NotificationMixin } from '~/utils/utils'
+import { NotificationMixin } from '~/mixins/notifications'
 import LabelApiMappings from '~/config/labels'
 
 // for access resolving strings to objects paths
