@@ -1,6 +1,7 @@
 import axios from 'axios'
 import merge from 'lodash.merge'
 import uniq from 'lodash.uniq'
+import operators from './operators'
 import projections from './projections'
 
 const defaults = {
@@ -32,6 +33,48 @@ const projectColumns = (endpoint, columns) => {
   return params
 }
 
+/*
+ * for now no nesting with $and or $or is supported
+ * we get 1 query object with ANDed fields, which can be filtered by operators
+ * no default $eq is implemented yet
+ *
+ * we return params to be consumable by axios and understandable by the API
+ *
+ * see: https://docs.mongodb.com/manual/tutorial/query-documents/
+ *     {
+ *       'credibility': { '$lt': 3 },
+ *       'animal': { '$gte': 2 }
+ *     }
+ */
+const constructFilter = (endpoint, query) => {
+  const localProjections = projections[endpoint] ? projections[endpoint] : {}
+  // all fields in the query
+  const params = Object.keys(query).reduce((accum, field) => {
+    const projectionIsKnown = Object.keys(localProjections).includes(field)
+    // all operators in the field
+    Object.keys(query[field]).map((operator) => {
+      const operatorIsKnown = Object.keys(operators).includes(operator)
+      const value = query[field][operator]
+      const valueIsDefinedAndNotNull = !!(value || value === '')
+
+      let fieldName = field
+      // if a projection specifies a path/is an alias to the information
+      if (projectionIsKnown && !!(localProjections[field]['path'])) {
+        fieldName = localProjections[field]['path']
+      }
+      if (valueIsDefinedAndNotNull && operatorIsKnown) {
+        // TODO sanitize/validate/escape field/value
+        const key = [fieldName, operators[operator]].join(':')
+        accum[key] = value
+      }
+    }, {})
+
+    return accum
+  }, {})
+
+  return params
+}
+
 const VueSupermarketApi = {
   install (Vue, config = {}) {
     // axios params
@@ -43,7 +86,7 @@ const VueSupermarketApi = {
     Vue.prototype.$supermarket = {
       // query the API for a list of items
       // returns a axios Promise
-      query: (endpoint, axiosOptions = {}, columns = [], options = {}) => {
+      query: (endpoint, axiosOptions = {}, columns = [], filters = {}, options = {}) => {
         const axiosDefaults = {
           url: endpoint,
           method: 'get',
@@ -56,6 +99,7 @@ const VueSupermarketApi = {
         axiosOptions = merge(axiosDefaults, axiosOptions)
         options = merge(defaults.options, options)
 
+        // apply the projection params
         const projectionParams = projectColumns(endpoint, columns)
         axiosOptions.params = merge(axiosOptions.params, projectionParams)
 
@@ -64,6 +108,10 @@ const VueSupermarketApi = {
         if (options.fetchFullModel && axiosOptions.params['only']) {
           delete axiosOptions.params['only']
         }
+
+        // apply the filter params
+        const filterParams = constructFilter(endpoint, filters)
+        axiosOptions.params = merge(axiosOptions.params, filterParams)
 
         return this.axios.request(axiosOptions)
       },

@@ -1,3 +1,6 @@
+/*
+ * map column identifiers to API
+ */
 const projections = {
   'labels': {
     'id': {
@@ -14,19 +17,23 @@ const projections = {
     },
     'credibility': {
       'only': ['details'],
-      'include': []
+      'include': [],
+      'path': 'details.score.credibility'
     },
     'environment': {
       'only': ['details'],
-      'include': []
+      'include': [],
+      'path': 'details.score.environment'
     },
     'social': {
       'only': ['details'],
-      'include': []
+      'include': [],
+      'path': 'details.score.social'
     },
     'animal': {
       'only': ['details'],
-      'include': []
+      'include': [],
+      'path': 'details.score.animal_welfare'
     },
     'hotspots': {
       'only': ['hotspots'],
