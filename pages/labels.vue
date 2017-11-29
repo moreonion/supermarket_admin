@@ -279,15 +279,16 @@ export default {
         return criteria
       })
     },
-    readMeetsCriteriaMap () {
+    // need using `this.$set()` for newly read properties
+    initializeMeetsCriteriaMap () {
       this.form.meets_criteria.map((item) => {
         const criterionId = item.criterion
         this.enabled_criteria.push(criterionId)
         if (item.score) {
-          this.enabled_criteria_measures[criterionId] = item.score
+          this.$set(this.enabled_criteria_measures, criterionId, `${item.score}`)
         }
         if (item.explanation) {
-          this.enabled_criteria_measures_explanations[criterionId] = item.explanation['en']
+          this.$set(this.enabled_criteria_measures_explanations, criterionId, item.explanation['en'])
         }
       })
     },
@@ -403,7 +404,7 @@ export default {
      */
     showEditModal (id) {
       this.form = JSON.parse(JSON.stringify(this.getFilteredLabel(id)))
-      this.readMeetsCriteriaMap()
+      this.initializeMeetsCriteriaMap()
       this.currentAction = 'edit'
       this.currentFormId = id
       this.showModal()
