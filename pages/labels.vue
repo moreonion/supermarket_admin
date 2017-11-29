@@ -322,6 +322,7 @@ export default {
           }
         },
         [], // projections
+        {}, // filters
         {
           fetchFullModel: true
         }
@@ -350,7 +351,8 @@ export default {
             sort: 'id'
           }
         },
-        this.allEnabledLabelColumns,
+        this.allEnabledLabelColumns, // projections
+        {}, // filters
         {
           fetchFullModel: true
         }
