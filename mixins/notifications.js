@@ -1,7 +1,7 @@
 export const NotificationMixin = {
   notifications: {
     notifySuccess: {
-      title: 'Sucess',
+      title: 'Success',
       message: 'Message',
       type: 'success'
     },
