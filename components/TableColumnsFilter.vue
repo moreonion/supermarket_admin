@@ -1,25 +1,28 @@
 <template>
   <div>
-    <b-form-checkbox v-for="name in orderedColumns" :key="name"
-                     :id="`checkbox-${name}`"
-                     :checked="isEnabledColumn(name)"
-                     @input="toggleColumn(name)">
-      {{ name }}
+    <b-form-checkbox v-for="column in columns" :key="column.name"
+                     :id="`checkbox-${column.name}`"
+                     :checked="column.state"
+                     @input="toggleColumn(column.name)">
+      {{ column.name }}
     </b-form-checkbox>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
-
 export default {
-  computed: mapGetters({
-    isEnabledColumn: 'labels/isEnabledColumn',
-    orderedColumns: 'labels/orderedColumns',
-    columnStates: 'labels/columnStates'
-  }),
-  methods: mapActions({
-    toggleColumn: 'labels/toggleColumn'
-  })
+  props: {
+    // ordered array of columns to configure
+    // expects e.g.: { name: "columnname", state: true }
+    columns: {
+      type: Array,
+      default: []
+    }
+  },
+  methods: {
+    toggleColumn (name) {
+      this.$emit('toggle', name)
+    }
+  }
 }
 </script>

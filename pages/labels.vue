@@ -138,7 +138,7 @@
       </b-modal>
 
       <b-modal ref="labelFilterModal" id="label-filter" title="Filter label columns" size="lg">
-        <table-columns-filter/>
+        <table-columns-filter :columns="localColumnStates" @toggle="toggleColumn"/>
       </b-modal>
     </div>
   </section>
@@ -180,13 +180,21 @@ export default {
   computed: {
     ...mapGetters({
       accessToken: 'accessToken',
+      enabledLanguages: 'languages/enabledLanguages',
       allLabels: 'labels/labels',
       allLabelStates: 'labels/labelStates',
-      enabledLanguages: 'languages/enabledLanguages',
+      orderedColumns: 'labels/orderedColumns',
+      allColumnStates: 'labels/columnStates',
       allEnabledLabelColumns: 'labels/enabledColumns',
       allCriteria: 'criteria/criteria',
       allCriteriaStates: 'criteria/criteriaStates'
     }),
+    // prepare data for table filter
+    localColumnStates () {
+      return this.orderedColumns.map((name) => {
+        return { name: name, state: this.allColumnStates[name].state }
+      })
+    },
     criterionOptions () {
       return this.allCriteria.map((criterionId) => {
         return { value: `${criterionId}`, text: this.allCriteriaStates[criterionId]['name'] }
@@ -240,6 +248,7 @@ export default {
   methods: {
     ...mapActions({
       setLabels: 'labels/setLabels',
+      toggleColumn: 'labels/toggleColumn',
       setCriteria: 'criteria/setCriteria'
     }),
     /**
