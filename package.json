@@ -28,7 +28,8 @@
     "lodash.uniq": "^4.5.0",
     "nuxt": "^1.0.0-rc11",
     "object-path": "^0.11.4",
-    "vue-notifications": "^0.9.0"
+    "vue-notifications": "^0.9.0",
+    "vue-supermarket-api": "./vue-supermarket-api"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",

@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import VueSupermarketApi from '../vue-supermarket-api'
+import VueSupermarketApi from 'vue-supermarket-api'
 
 import config from '../nuxt.config.js'
 
