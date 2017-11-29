@@ -17,10 +17,10 @@ const defaults = {
  * get columns, read projections for columns and return
  * param strings for the API (to be consumed by axios)
  */
-const projectColumns = (columns) => {
+const projectColumns = (endpoint, columns) => {
   const proj = columns.reduce((acc, item) => {
-    acc.only = uniq(acc.only.concat(projections[item].only))
-    acc.include = uniq(acc.include.concat(projections[item].include))
+    acc.only = uniq(acc.only.concat(projections[endpoint][item].only))
+    acc.include = uniq(acc.include.concat(projections[endpoint][item].include))
     return acc
   }, { only: [], include: [] })
 
@@ -56,7 +56,7 @@ const VueSupermarketApi = {
         axiosOptions = merge(axiosDefaults, axiosOptions)
         options = merge(defaults.options, options)
 
-        const projectionParams = projectColumns(columns)
+        const projectionParams = projectColumns(endpoint, columns)
         axiosOptions.params = merge(axiosOptions.params, projectionParams)
 
         // if we want to fetch the full model we simply have to make sure that
