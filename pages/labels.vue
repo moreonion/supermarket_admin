@@ -111,11 +111,14 @@
                     {{ criterion.text }}
                   </b-form-checkbox>
                   <div class="ml-4">
-                    <div class="input-group mb-2">
-                      <span class="input-group-addon">en</span>
+                    <div class="input-group mb-2" v-for="lang in enabledLanguages" :key="lang">
+                      <span class="input-group-addon">{{ lang }}</span>
                       <b-form-input
-                                    type="text" v-model="enabled_criteria_measures_explanations[criterion.value]"
-                                    placeholder="Explanation"
+                        :id="`label-criterion-${criterion.value}-explanation-${lang}`"
+                        type="text"
+                        :value="getExplanation(criterion.value, lang)"
+                        @input="value => { setExplanation(value, criterion.value, lang) }"
+                        placeholder="Explanation"
                       ></b-form-input>
                     </div>
                   </div>
@@ -251,6 +254,13 @@ export default {
       toggleColumn: 'labels/toggleColumn',
       setCriteria: 'criteria/setCriteria'
     }),
+    getExplanation (criterionId, lang) {
+      return ObjectPath.get(this.enabled_criteria_measures_explanations, [criterionId, lang], null)
+    },
+    setExplanation (value, criterionId, lang) {
+      ObjectPath.ensureExists(this.enabled_criteria_measures_explanations, [criterionId], {})
+      this.$set(this.enabled_criteria_measures_explanations[criterionId], lang, value)
+    },
     /**
      * generate links for <b-pagination-nav>
      */
@@ -282,7 +292,7 @@ export default {
           criteria['score'] = this.enabled_criteria_measures[item]
         }
         if (this.enabled_criteria_measures_explanations[item]) {
-          criteria['explanation'] = { 'en': this.enabled_criteria_measures_explanations[item] }
+          criteria['explanation'] = this.enabled_criteria_measures_explanations[item]
         }
 
         return criteria
@@ -297,7 +307,7 @@ export default {
           this.$set(this.enabled_criteria_measures, criterionId, `${item.score}`)
         }
         if (item.explanation) {
-          this.$set(this.enabled_criteria_measures_explanations, criterionId, item.explanation['en'])
+          this.$set(this.enabled_criteria_measures_explanations, criterionId, item.explanation)
         }
       })
     },
