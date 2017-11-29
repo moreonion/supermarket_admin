@@ -50,78 +50,84 @@
         <p class="mb-2">Create a new label</p>
 
         <b-form @submit.prevent="onSubmit" novalidate>
-          <b-form-group id="group-name"
-                        description="The name of the label"
-                        label="Label name"
-          >
-            <div class="input-group mb-2" v-for="lang in enabledLanguages" :key="lang">
-              <span class="input-group-addon">{{ lang }}</span>
-              <b-form-input
-                            :id="`label-name-${lang}`"
-                            type="text" v-model="form.name[lang]" required
-                            placeholder="Label name"
-              ></b-form-input>
-            </div>
-          </b-form-group>
-          <b-form-group id="group-type"
-                        description="The label type."
-                        label="Label type"
-          >
-            <b-form-select id="label-type" class="mb-2"
-                           type="text" v-model="form.type" required
-                           :options="spec.type.options"
-                           placeholder="Logo URL"
-            ></b-form-select>
-          </b-form-group>
-          <b-form-group id="group-logo"
-                        description="A URL to a logo for the label."
-                        label="Logo URL"
-          >
-            <div class="input-group mb-2" v-for="lang in enabledLanguages" :key="lang">
-              <span class="input-group-addon">{{ lang }}</span>
-              <b-form-input :id="`label-logo-${lang}`"
-                            type="url" v-model="form.logo[lang]"
-                            placeholder="Logo URL"
-              ></b-form-input>
-            </div>
-          </b-form-group>
-          <b-form-group id="group-description"
-                        description="A description for the label."
-                        label="Description"
-          >
-            <div class="input-group mb-2" v-for="lang in enabledLanguages" :key="lang">
-              <span class="input-group-addon">{{ lang }}</span>
-              <b-form-textarea id="`label-description-${lang}`"
-                               type="text" v-model="form.description[lang]"
-                               placeholder="Description"
-                               rows="3"
-              ></b-form-textarea>
-            </div>
-          </b-form-group>
-          <b-form-group id="group-criteria"
-                        description="Criteria associated with the label."
-                        label="Criteria"
-          >
-            <div id="label-criteria" v-for="criterion in criterionOptions" :key="criterion.value">
-              <b-form-checkbox v-model="enabled_criteria" :value="criterion.value">
-                {{ criterion.text }}
-              </b-form-checkbox>
-              <div class="ml-4">
-                <div class="input-group mb-2">
-                  <span class="input-group-addon">en</span>
+          <b-tabs>
+            <b-tab title="Label" active>
+              <b-form-group id="group-name"
+                            description="The name of the label"
+                            label="Label name"
+              >
+                <div class="input-group mb-2" v-for="lang in enabledLanguages" :key="lang">
+                  <span class="input-group-addon">{{ lang }}</span>
                   <b-form-input
-                                type="text" v-model="enabled_criteria_measures_explanations[criterion.value]"
-                                placeholder="Explanation"
+                                :id="`label-name-${lang}`"
+                                type="text" v-model="form.name[lang]" required
+                                placeholder="Label name"
                   ></b-form-input>
                 </div>
-              </div>
-              <div v-for="measure in getPossibleMeasureForCriterion(criterion.value)" class="ml-4" :key="measure.value">
-                <b-form-checkbox v-model="enabled_criteria_measures[criterion.value]" :value="measure.value">
-                  {{ measure.text }} (<span class="badge badge-light">{{ measure.value }}</span>)
-                </b-form-checkbox>
-              </div>
-            </div>
-          </b-form-group>
+              </b-form-group>
+              <b-form-group id="group-type"
+                            description="The label type."
+                            label="Label type"
+              >
+                <b-form-select id="label-type" class="mb-2"
+                               type="text" v-model="form.type" required
+                               :options="spec.type.options"
+                               placeholder="Logo URL"
+                ></b-form-select>
+              </b-form-group>
+              <b-form-group id="group-logo"
+                            description="A URL to a logo for the label."
+                            label="Logo URL"
+              >
+                <div class="input-group mb-2" v-for="lang in enabledLanguages" :key="lang">
+                  <span class="input-group-addon">{{ lang }}</span>
+                  <b-form-input :id="`label-logo-${lang}`"
+                                type="url" v-model="form.logo[lang]"
+                                placeholder="Logo URL"
+                  ></b-form-input>
+                </div>
+              </b-form-group>
+              <b-form-group id="group-description"
+                            description="A description for the label."
+                            label="Description"
+              >
+                <div class="input-group mb-2" v-for="lang in enabledLanguages" :key="lang">
+                  <span class="input-group-addon">{{ lang }}</span>
+                  <b-form-textarea id="`label-description-${lang}`"
+                                   type="text" v-model="form.description[lang]"
+                                   placeholder="Description"
+                                   rows="3"
+                  ></b-form-textarea>
+                </div>
+              </b-form-group>
+            </b-tab>
+            <b-tab title="Criteria">
+              <b-form-group id="group-criteria"
+                            description="Criteria associated with the label."
+                            label="Criteria"
+              >
+                <div id="label-criteria" v-for="criterion in criterionOptions" :key="criterion.value">
+                  <b-form-checkbox v-model="enabled_criteria" :value="criterion.value">
+                    {{ criterion.text }}
+                  </b-form-checkbox>
+                  <div class="ml-4">
+                    <div class="input-group mb-2">
+                      <span class="input-group-addon">en</span>
+                      <b-form-input
+                                    type="text" v-model="enabled_criteria_measures_explanations[criterion.value]"
+                                    placeholder="Explanation"
+                      ></b-form-input>
+                    </div>
+                  </div>
+                  <div v-for="measure in getPossibleMeasureForCriterion(criterion.value)" class="ml-4" :key="measure.value">
+                    <b-form-checkbox v-model="enabled_criteria_measures[criterion.value]" :value="measure.value">
+                      {{ measure.text }} (<span class="badge badge-light">{{ measure.value }}</span>)
+                    </b-form-checkbox>
+                  </div>
+                </div>
+              </b-form-group>
+            </b-tab>
+          </b-tabs>
 
           <div class="my-3">
             <b-btn type="submit" size="lg" class="ml-2 float-right" variant="primary">Submit</b-btn>
