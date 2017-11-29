@@ -1,0 +1,17 @@
+{
+  "name": "vue-supermarket-api",
+  "version": "0.1.0",
+  "description": "Common API calls",
+  "author": "Alex Berger <alex@more-onion.com>",
+  "private": true,
+  "files": "src/*.js",
+  "main": "src/index.js",
+  "peerDependencies": {
+    "vue": "^2.4.2"
+  },
+  "dependencies": {
+    "axios": "^0.16.2",
+    "lodash.merge": "^4.6.0",
+    "lodash.uniq": "^4.5.0"
+  }
+}
