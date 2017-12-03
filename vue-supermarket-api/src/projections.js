@@ -1,5 +1,11 @@
 /*
  * map column identifiers to API
+ *
+ * Projections here are currently seen as a schema of the API.
+ *
+ * so there is no need for the ability to inject *different* projections when
+ * calling the API; these projections are at the core business logic of this
+ * plugin.
  */
 const projections = {
   'labels': {
