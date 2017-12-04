@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div v-for="lang in enabledLanguages" :key="lang">
+    <div
+      v-for="lang in enabledLanguages"
+      :key="lang"
+    >
       <template v-if="hasTranslation(lang)">
         <span v-if="includeLabel" class="badge badge-secondary mr-1">{{ lang }}</span>
         {{ extractTranslation(lang).join(', ') }}
@@ -14,9 +17,10 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import forOwn from 'lodash.forown'
 import ObjectPath from 'object-path'
+
+import { mapGetters } from 'vuex'
 
 export default {
   props: {

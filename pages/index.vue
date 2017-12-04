@@ -8,9 +8,27 @@
         Admin interface for the Supplycha!nge database.
       </h2>
       <div class="btn-group">
-        <nuxt-link v-if="!isAuthenticated" to="/auth/sign-in" class="btn btn-outline-primary btn-lg">Sign in</nuxt-link>
-        <nuxt-link v-if="isAuthenticated" to="/home" class="btn btn-outline-primary btn-lg">Home</nuxt-link>
-        <nuxt-link v-if="isAuthenticated" to="/auth/sign-off" class="btn btn-outline-primary btn-lg">Sign off</nuxt-link>
+        <nuxt-link
+          v-if="!isAuthenticated"
+          to="/auth/sign-in"
+          class="btn btn-outline-primary btn-lg"
+        >
+          Sign in
+        </nuxt-link>
+        <nuxt-link
+          v-if="isAuthenticated"
+          to="/home"
+          class="btn btn-outline-primary btn-lg"
+        >
+          Home
+        </nuxt-link>
+        <nuxt-link
+          v-if="isAuthenticated"
+          to="/auth/sign-off"
+          class="btn btn-outline-primary btn-lg"
+        >
+          Sign off
+        </nuxt-link>
       </div>
     </div>
   </section>

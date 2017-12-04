@@ -1,6 +1,11 @@
 <template>
   <div>
-    <b-form-checkbox v-for="lang in orderedLanguages" @input="toggleLanguage(lang)" :checked="isEnabledLanguage(lang)" :key="lang">
+    <b-form-checkbox
+      v-for="lang in orderedLanguages"
+      @input="toggleLanguage(lang)"
+      :checked="isEnabledLanguage(lang)"
+      :key="lang"
+    >
       {{ lang }}
     </b-form-checkbox>
   </div>

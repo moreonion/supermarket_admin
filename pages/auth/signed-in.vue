@@ -5,13 +5,20 @@
         {{ title }}
       </h1>
       <p v-if="errorDescription">{{ errorDescription }}</p>
-      <button v-if="errorDescription" @click="loginRedirect()" class="btn btn-outline-primary btn-lg">Try again?</button>
+      <button
+        v-if="errorDescription"
+        class="btn btn-outline-primary btn-lg"
+        @click="loginRedirect()"
+      >
+        Try again?
+      </button>
     </div>
   </section>
 </template>
 
 <script>
 import jwtDecode from 'jwt-decode'
+
 import { createWebAuth, loginRedirect, setAuth } from '~/utils/auth'
 
 export default {
@@ -20,9 +27,6 @@ export default {
       title: 'Signing in...',
       errorDescription: null
     }
-  },
-  methods: {
-    loginRedirect
   },
   mounted () {
     let webAuth = createWebAuth()
@@ -42,6 +46,9 @@ export default {
 
       this.$router.replace('/home')
     })
+  },
+  methods: {
+    loginRedirect
   }
 }
 </script>

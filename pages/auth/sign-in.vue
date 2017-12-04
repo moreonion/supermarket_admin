@@ -4,7 +4,12 @@
       <h1 class="title">
         Sign in
       </h1>
-      <button @click="loginRedirect()" class="btn btn-outline-primary btn-lg">Sign in via Auth0..</button>
+      <button
+        class="btn btn-outline-primary btn-lg"
+        @click="loginRedirect()"
+      >
+        Sign in via Auth0..
+      </button>
     </div>
   </section>
 </template>

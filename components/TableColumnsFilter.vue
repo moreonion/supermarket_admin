@@ -1,9 +1,12 @@
 <template>
   <div>
-    <b-form-checkbox v-for="column in columns" :key="column.name"
-                     :id="`checkbox-${column.name}`"
-                     :checked="column.state"
-                     @input="toggleColumn(column.name)">
+    <b-form-checkbox
+      v-for="column in columns"
+      :key="column.name"
+      :id="`checkbox-${column.name}`"
+      :checked="column.state"
+      @input="toggleColumn(column.name)"
+    >
       {{ column.name }}
     </b-form-checkbox>
   </div>

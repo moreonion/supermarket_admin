@@ -18,30 +18,58 @@
         </div>
       </div>
 
-      <b-pagination-nav size="md" use-route :link-gen="linkGen" :number-of-pages="itemsPages" v-model="currentPage">
-      </b-pagination-nav>
+      <b-pagination-nav
+        size="md"
+        use-route
+        :link-gen="linkGen"
+        :number-of-pages="itemsPages"
+        v-model="currentPage"
+      ></b-pagination-nav>
 
       <table class="table">
         <thead>
           <tr>
-            <th v-for="column in allEnabledLabelColumns" scope="col" :key="column">{{ column }}</th>
+            <th
+              v-for="column in allEnabledLabelColumns"
+              :key="column"
+              scope="col"
+            >
+              {{ column }}
+            </th>
             <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="label in allLabels" :key="label">
-            <td v-for="column in allEnabledLabelColumns">
+            <td v-for="column in allEnabledLabelColumns" :key="column">
               <div v-if="column === 'name'">
-                <translated-text include-label display-missing :translations="getValueFor(allLabelStates[label], column)"/>
+                <translated-text
+                  include-label
+                  display-missing
+                  :translations="getValueFor(allLabelStates[label], column)"
+                />
               </div>
               <div v-else-if="['hotspots', 'resources'].includes(column)">
-                <translated-text-list include-label display-missing translation-key="name" :translation-list="getValueFor(allLabelStates[label], column)"/>
+                <translated-text-list
+                  include-label
+                  display-missing
+                  translation-key="name"
+                  :translation-list="getValueFor(allLabelStates[label], column)"
+                />
               </div>
               <div v-else>
                 {{ getValueFor(allLabelStates[label], column) }}
               </div>
             </td>
-            <td><b-btn size="sm" variant="outline-primary" @click="showEditModal(label)">Edit</b-btn></td>
+            <td>
+              <b-btn
+                size="sm"
+                variant="outline-primary"
+                @click="showEditModal(label)"
+              >
+                Edit
+              </b-btn>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -52,61 +80,92 @@
         <b-form @submit.prevent="onSubmit" novalidate>
           <b-tabs>
             <b-tab title="Label" active>
-              <b-form-group id="group-name"
-                            description="The name of the label"
-                            label="Label name"
+              <b-form-group
+                id="group-name"
+                description="The name of the label"
+                label="Label name"
               >
-                <div class="input-group mb-2" v-for="lang in enabledLanguages" :key="lang">
+                <div
+                  v-for="lang in enabledLanguages"
+                  :key="lang"
+                  class="input-group mb-2"
+                >
                   <span class="input-group-addon">{{ lang }}</span>
                   <b-form-input
-                                :id="`label-name-${lang}`"
-                                type="text" v-model="form.name[lang]" required
-                                placeholder="Label name"
+                    :id="`label-name-${lang}`"
+                    v-model="form.name[lang]"
+                    type="text"
+                    placeholder="Label name"
+                    required
                   ></b-form-input>
                 </div>
               </b-form-group>
-              <b-form-group id="group-type"
-                            description="The label type."
-                            label="Label type"
+              <b-form-group
+                id="group-type"
+                description="The label type."
+                label="Label type"
               >
-                <b-form-select id="label-type" class="mb-2"
-                               type="text" v-model="form.type" required
-                               :options="spec.type.options"
-                               placeholder="Logo URL"
+                <b-form-select
+                  id="label-type"
+                  v-model="form.type"
+                  :options="spec.type.options"
+                  type="text"
+                  placeholder="Logo URL"
+                  required
+                  class="mb-2"
                 ></b-form-select>
               </b-form-group>
-              <b-form-group id="group-logo"
-                            description="A URL to a logo for the label."
-                            label="Logo URL"
+              <b-form-group
+                id="group-logo"
+                description="A URL to a logo for the label."
+                label="Logo URL"
               >
-                <div class="input-group mb-2" v-for="lang in enabledLanguages" :key="lang">
+                <div
+                  v-for="lang in enabledLanguages"
+                  :key="lang"
+                  class="input-group mb-2"
+                >
                   <span class="input-group-addon">{{ lang }}</span>
-                  <b-form-input :id="`label-logo-${lang}`"
-                                type="url" v-model="form.logo[lang]"
-                                placeholder="Logo URL"
+                  <b-form-input
+                    :id="`label-logo-${lang}`"
+                    v-model="form.logo[lang]"
+                    type="url"
+                    placeholder="Logo URL"
                   ></b-form-input>
                 </div>
               </b-form-group>
-              <b-form-group id="group-description"
-                            description="A description for the label."
-                            label="Description"
+              <b-form-group
+                id="group-description"
+                description="A description for the label."
+                label="Description"
               >
-                <div class="input-group mb-2" v-for="lang in enabledLanguages" :key="lang">
+                <div
+                  v-for="lang in enabledLanguages"
+                  :key="lang"
+                  class="input-group mb-2"
+                >
                   <span class="input-group-addon">{{ lang }}</span>
-                  <b-form-textarea id="`label-description-${lang}`"
-                                   type="text" v-model="form.description[lang]"
-                                   placeholder="Description"
-                                   rows="3"
+                  <b-form-textarea
+                    id="`label-description-${lang}`"
+                    v-model="form.description[lang]"
+                    type="text"
+                    placeholder="Description"
+                    rows="3"
                   ></b-form-textarea>
                 </div>
               </b-form-group>
             </b-tab>
             <b-tab title="Criteria">
-              <b-form-group id="group-criteria"
-                            description="Criteria associated with the label."
-                            label="Criteria"
+              <b-form-group
+                id="group-criteria"
+                description="Criteria associated with the label."
+                label="Criteria"
               >
-                <div id="label-criteria" v-for="criterion in criterionOptions" :key="criterion.value">
+                <div
+                  v-for="criterion in criterionOptions"
+                  id="label-criteria"
+                  :key="criterion.value"
+                >
                   <b-form-checkbox v-model="enabled_criteria" :value="criterion.value">
                     {{ criterion.text }}
                   </b-form-checkbox>
@@ -115,15 +174,22 @@
                       <span class="input-group-addon">{{ lang }}</span>
                       <b-form-input
                         :id="`label-criterion-${criterion.value}-explanation-${lang}`"
-                        type="text"
                         :value="getExplanation(criterion.value, lang)"
                         @input="value => { setExplanation(value, criterion.value, lang) }"
+                        type="text"
                         placeholder="Explanation"
                       ></b-form-input>
                     </div>
                   </div>
-                  <div v-for="measure in getPossibleMeasureForCriterion(criterion.value)" class="ml-4" :key="measure.value">
-                    <b-form-checkbox v-model="enabled_criteria_measures[criterion.value]" :value="measure.value">
+                  <div
+                    v-for="measure in getPossibleMeasureForCriterion(criterion.value)"
+                    :key="measure.value"
+                    class="ml-4"
+                  >
+                    <b-form-checkbox
+                      v-model="enabled_criteria_measures[criterion.value]"
+                      :value="measure.value"
+                    >
                       {{ measure.text }} (<span class="badge badge-light">{{ measure.value }}</span>)
                     </b-form-checkbox>
                   </div>
@@ -133,31 +199,64 @@
           </b-tabs>
 
           <div class="my-3">
-            <b-btn type="submit" size="lg" class="ml-2 float-right" variant="primary">Submit</b-btn>
-            <b-btn type="reset" size="lg" class="ml-2 float-right" variant="secondary" @click="resetFormData">Reset</b-btn>
-            <b-btn size="lg" class="ml-2 float-right" variant="secondary" @click="show=false">Close</b-btn>
+            <b-btn
+              type="submit"
+              size="lg"
+              variant="primary"
+              class="ml-2 float-right"
+            >
+              Submit
+            </b-btn>
+            <b-btn
+              type="reset"
+              size="lg"
+              variant="secondary"
+              class="ml-2 float-right"
+              @click="resetFormData"
+            >
+              Reset
+            </b-btn>
+            <b-btn
+              size="lg"
+              class="ml-2 float-right"
+              variant="secondary"
+              @click="show=false"
+            >
+              Close
+            </b-btn>
           </div>
         </b-form>
       </b-modal>
 
-      <b-modal ref="labelFilterModal" id="label-filter" title="Filter label columns" size="lg">
-        <table-columns-filter :columns="localColumnStates" @toggle="toggleColumn"/>
+      <b-modal
+        id="label-filter"
+        ref="labelFilterModal"
+        title="Filter label columns"
+        size="lg"
+      >
+        <table-columns-filter
+          :columns="localColumnStates"
+          @toggle="toggleColumn"
+        />
       </b-modal>
     </div>
   </section>
 </template>
 
 <script>
+// for access resolving strings to objects paths
+import ObjectPath from 'object-path'
+
 import { mapGetters, mapActions } from 'vuex'
+
+// config
+import LabelApiMappings from '~/config/labels'
+
+import { NotificationMixin } from '~/mixins/notifications'
 import LanguageEnabler from '~/components/LanguageEnabler'
 import TableColumnsFilter from '~/components/TableColumnsFilter'
 import TranslatedText from '~/components/TranslatedText'
 import TranslatedTextList from '~/components/TranslatedTextList'
-import { NotificationMixin } from '~/mixins/notifications'
-import LabelApiMappings from '~/config/labels'
-
-// for access resolving strings to objects paths
-import ObjectPath from 'object-path'
 
 // copy with `JSON.parse(JSON.stringify(defaultFormData))`
 // to prevent setting references to this "immutable" object
@@ -180,6 +279,33 @@ export default {
     TranslatedTextList
   },
   middleware: 'authenticated',
+  data () {
+    return {
+      currentPage: 1,
+      itemsPages: 1,
+      itemsPageLimit: 10,
+      currentAction: 'create', // or 'edit'
+      currentFormId: null, // or an ID of a label being edited
+      editableFields: ['name', 'description', 'logo', 'type', 'meets_criteria'],
+      // decoupled storage because we want to retain state when parent gets disabled
+      // this is relevant for: enabled_criteria, enabled_criteria_measures,
+      // enabled_criteria_measures_explanations
+      enabled_criteria: [], // list
+      enabled_criteria_measures: {}, // map id -> id
+      enabled_criteria_measures_explanations: {}, // map id -> id -> string
+      spec: {
+        type: {
+          options: [
+            { value: 'product', text: 'Product' },
+            { value: 'retailer', text: 'Retailer' }
+          ]
+        }
+      },
+      form: {
+        ...JSON.parse(JSON.stringify(defaultFormData))
+      }
+    }
+  },
   computed: {
     ...mapGetters({
       accessToken: 'accessToken',
@@ -211,33 +337,6 @@ export default {
         })
         return acc
       }, {})
-    }
-  },
-  data () {
-    return {
-      currentPage: 1,
-      itemsPages: 1,
-      itemsPageLimit: 10,
-      currentAction: 'create', // or 'edit'
-      currentFormId: null, // or an ID of a label being edited
-      editableFields: ['name', 'description', 'logo', 'type', 'meets_criteria'],
-      // decoupled storage because we want to retain state when parent gets disabled
-      // this is relevant for: enabled_criteria, enabled_criteria_measures,
-      // enabled_criteria_measures_explanations
-      enabled_criteria: [], // list
-      enabled_criteria_measures: {}, // map id -> id
-      enabled_criteria_measures_explanations: {}, // map id -> id -> string
-      spec: {
-        type: {
-          options: [
-            { value: 'product', text: 'Product' },
-            { value: 'retailer', text: 'Retailer' }
-          ]
-        }
-      },
-      form: {
-        ...JSON.parse(JSON.stringify(defaultFormData))
-      }
     }
   },
   mounted () {
