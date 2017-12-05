@@ -19,7 +19,7 @@ export default {
     // expects e.g.: { name: "columnname", state: true }
     columns: {
       type: Array,
-      default: []
+      default: () => []
     }
   },
   methods: {

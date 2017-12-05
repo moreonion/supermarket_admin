@@ -10,6 +10,7 @@
           <div class="btn-group">
             <b-btn class="btn btn-outline-primary" v-b-modal.label-form>New</b-btn>
             <b-btn class="btn btn-outline-primary" v-b-modal.label-filter>Filter</b-btn>
+            <b-btn class="btn btn-outline-primary" v-b-modal.label-query-filter>Query</b-btn>
           </div>
         </div>
 
@@ -230,13 +231,23 @@
 
       <b-modal
         id="label-filter"
-        ref="labelFilterModal"
         title="Filter label columns"
         size="lg"
       >
         <table-columns-filter
           :columns="localColumnStates"
           @toggle="toggleColumn"
+        />
+      </b-modal>
+
+      <b-modal
+        id="label-query-filter"
+        title="Filter query"
+        size="lg"
+      >
+        <query-filter
+          :columns="localColumnStates"
+          @apply="applyFilters"
         />
       </b-modal>
     </div>
@@ -246,6 +257,7 @@
 <script>
 // for access resolving strings to objects paths
 import ObjectPath from 'object-path'
+import merge from 'lodash.merge'
 
 import { mapGetters, mapActions } from 'vuex'
 
@@ -257,6 +269,7 @@ import LanguageEnabler from '~/components/LanguageEnabler'
 import TableColumnsFilter from '~/components/TableColumnsFilter'
 import TranslatedText from '~/components/TranslatedText'
 import TranslatedTextList from '~/components/TranslatedTextList'
+import QueryFilter from '~/components/QueryFilter'
 
 // copy with `JSON.parse(JSON.stringify(defaultFormData))`
 // to prevent setting references to this "immutable" object
@@ -276,7 +289,8 @@ export default {
     LanguageEnabler,
     TableColumnsFilter,
     TranslatedText,
-    TranslatedTextList
+    TranslatedTextList,
+    QueryFilter
   },
   middleware: 'authenticated',
   data () {
@@ -293,6 +307,7 @@ export default {
       enabled_criteria: [], // list
       enabled_criteria_measures: {}, // map id -> id
       enabled_criteria_measures_explanations: {}, // map id -> id -> string
+      labelFilters: {},
       spec: {
         type: {
           options: [
@@ -451,7 +466,7 @@ export default {
           }
         },
         this.allEnabledLabelColumns, // projections
-        {}, // filters
+        this.labelFilters, // filters
         {
           fetchFullModel: true
         }
@@ -564,6 +579,18 @@ export default {
       } else {
         console.log('invalid form')
       }
+    },
+    // TODO paging
+    applyFilters (filters) {
+      // merge multiple filters under 1 field
+      const queryObj = filters.reduce((acc, filter) => {
+        let query = {}
+        ObjectPath.set(query, [filter.field, filter.operator], filter.value)
+        return merge(acc, query)
+      }, {})
+      console.log(queryObj)
+      this.labelFilters = queryObj
+      this.fetchLabels()
     }
   }
 }
