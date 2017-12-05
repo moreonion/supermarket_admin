@@ -364,7 +364,9 @@ export default {
       // merge multiple filters under 1 field
       const obj = this.currentLabelFilters.reduce((acc, filter) => {
         let query = {}
-        ObjectPath.set(query, [filter.field, filter.operator], filter.value)
+        if (filter.field && filter.operator) {
+          ObjectPath.set(query, [filter.field, filter.operator], filter.value)
+        }
         return merge(acc, query)
       }, {})
       console.log(obj)
