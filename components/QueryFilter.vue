@@ -16,7 +16,7 @@
             :options="fieldOptions">
           </b-form-select>
         </b-form-group>
-        <b-form-group class="col-md-4">
+        <b-form-group class="col-md-3">
           <b-form-select
             v-model="filter.operator"
             :options="operators"
@@ -28,6 +28,16 @@
             v-model="filter.value"
             type="text"
           ></b-form-input>
+        </b-form-group>
+        <b-form-group class="col-md-1">
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            @click="removeFilter(filterIndex)"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
         </b-form-group>
       </div>
     </div>
@@ -75,6 +85,9 @@ export default {
     // all filters will be connected with AND
     addFilter () {
       this.localFilters.push({})
+    },
+    removeFilter (index) {
+      this.localFilters.splice(index, 1)
     },
     applyFilters () {
       this.$emit('apply', JSON.parse(JSON.stringify(this.localFilters)))
