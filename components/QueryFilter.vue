@@ -77,7 +77,7 @@ export default {
       this.localFilters.push({})
     },
     applyFilters () {
-      this.$emit('apply', this.localFilters)
+      this.$emit('apply', JSON.parse(JSON.stringify(this.localFilters)))
     }
   }
 }
