@@ -230,7 +230,6 @@
 
       <b-modal
         id="label-filter"
-        ref="labelFilterModal"
         title="Filter label columns"
         size="lg"
       >
