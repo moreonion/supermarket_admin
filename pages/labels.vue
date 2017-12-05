@@ -10,6 +10,7 @@
           <div class="btn-group">
             <b-btn class="btn btn-outline-primary" v-b-modal.label-form>New</b-btn>
             <b-btn class="btn btn-outline-primary" v-b-modal.label-filter>Filter</b-btn>
+            <b-btn class="btn btn-outline-primary" v-b-modal.label-query-filter>Query</b-btn>
           </div>
         </div>
 
@@ -238,6 +239,19 @@
           @toggle="toggleColumn"
         />
       </b-modal>
+
+      <b-modal
+        id="label-query-filter"
+        title="Filter query"
+        size="lg"
+      >
+        <query-filter
+          :columns="localColumnStates"
+          :filters="currentLabelFilters"
+          :operators="operators"
+          @apply="applyFilters"
+        />
+      </b-modal>
     </div>
   </section>
 </template>
@@ -245,8 +259,12 @@
 <script>
 // for access resolving strings to objects paths
 import ObjectPath from 'object-path'
+import merge from 'lodash.merge'
 
 import { mapGetters, mapActions } from 'vuex'
+
+// TODO maybe there is a better way to import this
+import operators from 'vue-supermarket-api/src/operators'
 
 // config
 import LabelApiMappings from '~/config/labels'
@@ -256,6 +274,7 @@ import LanguageEnabler from '~/components/LanguageEnabler'
 import TableColumnsFilter from '~/components/TableColumnsFilter'
 import TranslatedText from '~/components/TranslatedText'
 import TranslatedTextList from '~/components/TranslatedTextList'
+import QueryFilter from '~/components/QueryFilter'
 
 // copy with `JSON.parse(JSON.stringify(defaultFormData))`
 // to prevent setting references to this "immutable" object
@@ -275,7 +294,8 @@ export default {
     LanguageEnabler,
     TableColumnsFilter,
     TranslatedText,
-    TranslatedTextList
+    TranslatedTextList,
+    QueryFilter
   },
   middleware: 'authenticated',
   data () {
@@ -302,7 +322,8 @@ export default {
       },
       form: {
         ...JSON.parse(JSON.stringify(defaultFormData))
-      }
+      },
+      operators: Object.keys(operators)
     }
   },
   computed: {
@@ -314,6 +335,7 @@ export default {
       orderedColumns: 'labels/orderedColumns',
       allColumnStates: 'labels/columnStates',
       allEnabledLabelColumns: 'labels/enabledColumns',
+      currentLabelFilters: 'labels/filters',
       allCriteria: 'criteria/criteria',
       allCriteriaStates: 'criteria/criteriaStates'
     }),
@@ -336,6 +358,17 @@ export default {
         })
         return acc
       }, {})
+    },
+    // later occurences of a field-operator combination override former ones
+    getFilterObject () {
+      // merge multiple filters under 1 field
+      const obj = this.currentLabelFilters.reduce((acc, filter) => {
+        let query = {}
+        ObjectPath.set(query, [filter.field, filter.operator], filter.value)
+        return merge(acc, query)
+      }, {})
+      console.log(obj)
+      return obj
     }
   },
   mounted () {
@@ -349,6 +382,7 @@ export default {
   methods: {
     ...mapActions({
       setLabels: 'labels/setLabels',
+      setFilters: 'labels/setFilters',
       toggleColumn: 'labels/toggleColumn',
       setCriteria: 'criteria/setCriteria'
     }),
@@ -450,7 +484,7 @@ export default {
           }
         },
         this.allEnabledLabelColumns, // projections
-        {}, // filters
+        this.getFilterObject, // filters
         {
           fetchFullModel: true
         }
@@ -563,6 +597,11 @@ export default {
       } else {
         console.log('invalid form')
       }
+    },
+    applyFilters (filters) {
+      this.setFilters(filters)
+      // TODO ensure sync (the store action is to be considered async)?
+      this.fetchLabels()
     }
   }
 }

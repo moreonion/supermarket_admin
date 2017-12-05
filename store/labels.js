@@ -13,7 +13,10 @@ export const state = () => ({
     social: { state: true, order: 'asc' },
     animal: { state: true, order: 'asc' },
     countries: { state: true, order: 'asc' }
-  }
+  },
+  // array of filters
+  // used for app state: persisting filter state when paging the API
+  filters: []
 })
 
 export const mutations = {
@@ -22,6 +25,9 @@ export const mutations = {
   },
   DISABLE_COLUMN (state, name) {
     state.column_states[name].state = false
+  },
+  SET_FILTERS (state, filters) {
+    state.filters = filters
   },
   SET_LABELS (state, labels) {
     state.labels = labels.ids || []
@@ -56,6 +62,9 @@ export const getters = {
     return name => {
       return getters.enabledColumns.indexOf(name) !== -1
     }
+  },
+  filters (state) {
+    return state.filters
   }
 }
 
@@ -68,6 +77,15 @@ export const actions = {
   },
   toggleColumn ({ commit, getters }, name) {
     getters.isEnabledColumn(name) ? commit('DISABLE_COLUMN', name) : commit('ENABLE_COLUMN', name)
+  },
+  /*
+   * save the current filters for the API queries
+   */
+  setFilters ({ commit }, filters) {
+    commit('SET_FILTERS', filters)
+  },
+  resetFilters ({ commit }, filters) {
+    commit('SET_LABELS', [])
   },
   /*
    * get a list of item objects and reduce it into two structures:
