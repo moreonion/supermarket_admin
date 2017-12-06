@@ -1,10 +1,19 @@
+/*
+ * see https://docs.mongodb.com/manual/reference/operator/query/
+ */
 const operators = {
+  // MongoDB-style operators
   '$eq': 'eq',
-  '$gte': 'ge',
   '$gt': 'gt',
-  '$lte': 'le',
+  '$gte': 'ge',
+  '$in': 'in',
   '$lt': 'lt',
-  '$in': 'in'
+  '$lte': 'le',
+  '$ne': 'ne',
+  // '$nin': null, // not implemented in the API
+
+  // custom operators of the API
+  '$like': 'like'
 }
 
 export default operators
