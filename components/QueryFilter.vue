@@ -10,13 +10,13 @@
         :key="filterIndex"
         class="form-row"
       >
-        <b-form-group class="col-md-4">
+        <b-form-group class="col-md-3">
           <b-form-select
             v-model="filter.field"
             :options="fieldOptions">
           </b-form-select>
         </b-form-group>
-        <b-form-group class="col-md-3">
+        <b-form-group class="col-md-2">
           <b-form-select
             v-model="filter.operator"
             :options="operators"
@@ -28,6 +28,12 @@
             v-model="filter.value"
             type="text"
           ></b-form-input>
+        </b-form-group>
+        <b-form-group class="col-md-2">
+          <b-form-select
+            v-model="filter.language"
+            :options="languagesOptions">
+          </b-form-select>
         </b-form-group>
         <b-form-group class="col-md-1">
           <button
@@ -62,6 +68,11 @@ export default {
     filters: {
       type: Array,
       default: () => []
+    },
+    // array of languages for filters
+    languages: {
+      type: Array,
+      default: () => []
     }
   },
   data () {
@@ -78,6 +89,10 @@ export default {
       return this.columns.map((column) => {
         return { value: `${column.name}`, text: `${column.name}` }
       })
+    },
+    // array of select options for use with translated fields
+    languagesOptions () {
+      return this.languages
     }
   },
   methods: {

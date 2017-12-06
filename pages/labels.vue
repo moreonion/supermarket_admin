@@ -249,6 +249,7 @@
           :columns="localColumnStates"
           :filters="currentLabelFilters"
           :operators="operators"
+          :languages="enabledLanguages"
           @apply="applyFilters"
         />
       </b-modal>
@@ -365,7 +366,13 @@ export default {
       const obj = this.currentLabelFilters.reduce((acc, filter) => {
         let query = {}
         if (filter.field && filter.operator) {
-          ObjectPath.set(query, [filter.field, filter.operator], filter.value)
+          let fieldName = filter.field
+          if (filter.language && filter.language !== '') {
+            // TODO check if language in "allowed" languages of this.queryableLanguages
+            // TODO do not hard-code separator `.`
+            fieldName = [filter.field, filter.language].join('.')
+          }
+          ObjectPath.set(query, [fieldName, filter.operator], filter.value)
         }
         return merge(acc, query)
       }, {})
