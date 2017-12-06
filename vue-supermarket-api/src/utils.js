@@ -47,17 +47,19 @@ export const constructFilter = (endpoint, query) => {
   // all fields in the query
   const params = Object.keys(query).reduce((accum, field) => {
     const projectionIsKnown = Object.keys(localProjections).includes(field)
+
+    let fieldName = field
+    // if a projection specifies a path/is an alias to the information
+    if (projectionIsKnown && !!(localProjections[field]['path'])) {
+      fieldName = localProjections[field]['path']
+    }
+
     // all operators in the field
     Object.keys(query[field]).map((operator) => {
       const operatorIsKnown = Object.keys(operators).includes(operator)
       const value = query[field][operator]
       const valueIsDefinedAndNotNull = (typeof value !== 'undefined' && value !== null)
 
-      let fieldName = field
-      // if a projection specifies a path/is an alias to the information
-      if (projectionIsKnown && !!(localProjections[field]['path'])) {
-        fieldName = localProjections[field]['path']
-      }
       if (valueIsDefinedAndNotNull && operatorIsKnown) {
         // TODO sanitize/validate/escape field/value
         const key = [fieldName, operators[operator]].join(':')
