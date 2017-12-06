@@ -5,6 +5,10 @@ import projections from './projections'
 /*
  * get columns, read projections for columns and return
  * param strings for the API (to be consumed by axios)
+ *
+ * TODO:
+ * - inject projections
+ * - do err when empty endpoint
  */
 export const projectColumns = (endpoint, columns) => {
   const proj = columns.reduce((acc, item) => {
@@ -33,6 +37,10 @@ export const projectColumns = (endpoint, columns) => {
  *       'credibility': { '$lt': 3 },
  *       'animal': { '$gte': 2 }
  *     }
+ *
+ * TODO:
+ * - inject projections
+ * - do err when empty endpoint
  */
 export const constructFilter = (endpoint, query) => {
   const localProjections = projections[endpoint] ? projections[endpoint] : {}
