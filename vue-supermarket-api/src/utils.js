@@ -43,7 +43,7 @@ export const constructFilter = (endpoint, query) => {
     Object.keys(query[field]).map((operator) => {
       const operatorIsKnown = Object.keys(operators).includes(operator)
       const value = query[field][operator]
-      const valueIsDefinedAndNotNull = !!(value || value === '')
+      const valueIsDefinedAndNotNull = (typeof value !== 'undefined' && value !== null)
 
       let fieldName = field
       // if a projection specifies a path/is an alias to the information
