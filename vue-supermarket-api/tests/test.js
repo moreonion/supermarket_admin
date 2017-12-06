@@ -1,4 +1,8 @@
 /* global describe, it */
+/*
+ * caveats:
+ * - tightly coupled to operators.js and projections.js
+ */
 import { assert } from 'chai'
 
 import VueSupermarketApi from '../src/'

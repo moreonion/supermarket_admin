@@ -6,9 +6,12 @@ import projections from './projections'
  * get columns, read projections for columns and return
  * param strings for the API (to be consumed by axios)
  *
+ * endpoint: a endpoint, e.g. 'labels', as defined in projections
+ * columns: a list of projection names (columns)
+ *
  * TODO:
  * - inject projections
- * - do err when empty endpoint
+ * - do not err when empty/undefined endpoint
  */
 export const projectColumns = (endpoint, columns) => {
   const proj = columns.reduce((acc, item) => {
@@ -34,13 +37,21 @@ export const projectColumns = (endpoint, columns) => {
  *
  * see: https://docs.mongodb.com/manual/tutorial/query-documents/
  *     {
+ *       'name.en': { '$eq': 'Name' },
  *       'credibility': { '$lt': 3 },
  *       'animal': { '$gte': 2 }
  *     }
  *
+ * endpoint: a endpoint, e.g. 'labels', as defined in projections
+ * query: a MongoDB query style query
+ *     a field name can specifiy a language/translation to query but appending
+ *     the languauge code (this should be consistent with MongoDB style query
+ *     style)
+ *     if a field is translatable is defined in projections
+ *
  * TODO:
  * - inject projections
- * - do err when empty endpoint
+ * - do not err when empty/undefined endpoint
  */
 export const constructFilter = (endpoint, query) => {
   const localProjections = projections[endpoint] ? projections[endpoint] : {}
