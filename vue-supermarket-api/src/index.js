@@ -1,7 +1,11 @@
 import axios from 'axios'
 import merge from 'lodash.merge'
+
 import defaults from './defaults'
 import { projectColumns, constructFilter } from './utils'
+
+export { default as operators } from './operators'
+export { default as projections } from './projections'
 
 const VueSupermarketApi = {
   install (Vue, config = {}) {
