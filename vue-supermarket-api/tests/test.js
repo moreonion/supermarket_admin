@@ -67,6 +67,32 @@ describe('VueSupermarketApi', function () {
 
         assert.deepEqual(actual, expected)
       })
+
+      // translatable fields
+      it('deals with a translated field by appending the language to the field', function () {
+        const query = {
+          'name.en': { '$eq': 'Name' }
+        }
+        const expected = {
+          'name.en:eq': 'Name'
+        }
+
+        const actual = constructFilter('labels', query)
+
+        assert.deepEqual(actual, expected)
+      })
+      it('deals with not translated field by removing the language "request"', function () {
+        const query = {
+          'credibility.en': { '$gt': 0 }
+        }
+        const expected = {
+          'details.score.credibility:gt': 0
+        }
+
+        const actual = constructFilter('labels', query)
+
+        assert.deepEqual(actual, expected)
+      })
     })
   })
 })

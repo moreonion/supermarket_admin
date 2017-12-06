@@ -6,6 +6,8 @@
  * so there is no need for the ability to inject *different* projections when
  * calling the API; these projections are at the core business logic of this
  * plugin.
+ *
+ * translatable default: false
  */
 const projections = {
   'labels': {
@@ -15,11 +17,13 @@ const projections = {
     },
     'name': {
       'only': ['name'],
-      'include': []
+      'include': [],
+      'translatable': true
     },
     'logo': {
       'only': ['logo'],
-      'include': []
+      'include': [],
+      'translatable': true
     },
     'credibility': {
       'only': ['details'],
@@ -47,7 +51,9 @@ const projections = {
     },
     'resources': {
       'only': ['resources'],
-      'include': ['resources.name']
+      'include': ['resources.name'],
+      'path': 'resources.name',
+      'translatable': true
     },
     'countries': {
       'only': ['countries'],

@@ -46,12 +46,29 @@ export const constructFilter = (endpoint, query) => {
   const localProjections = projections[endpoint] ? projections[endpoint] : {}
   // all fields in the query
   const params = Object.keys(query).reduce((accum, field) => {
-    const projectionIsKnown = Object.keys(localProjections).includes(field)
+    // determine if we have a language part
+    const langIndex = field.lastIndexOf('.')
+    let projectionName = field
+    let language = null
+    if (langIndex !== -1) {
+      projectionName = field.substring(0, langIndex)
+      language = field.substring(langIndex + 1)
+    }
 
-    let fieldName = field
+    const projectionIsKnown = Object.keys(localProjections).includes(projectionName)
+
+    // determine field name to be sent to API
+    let fieldName = projectionName
     // if a projection specifies a path/is an alias to the information
-    if (projectionIsKnown && !!(localProjections[field]['path'])) {
-      fieldName = localProjections[field]['path']
+    if (projectionIsKnown && !!(localProjections[projectionName]['path'])) {
+      fieldName = localProjections[projectionName]['path']
+    }
+    // ensure only translatable fields get an language added
+    // if the field is not translatable the language get cut off
+    if (language && projectionIsKnown) {
+      if (localProjections[projectionName]['translatable']) {
+        fieldName = [fieldName, language].join('.')
+      }
     }
 
     // all operators in the field
