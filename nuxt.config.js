@@ -64,8 +64,7 @@ module.exports = {
     { src: '~/plugins/vue-supermarket-api', ssr: false }
   ],
   modules: [
-    '@nuxtjs/bootstrap-vue',
-    '@nuxtjs/axios'
+    '@nuxtjs/bootstrap-vue'
   ],
   supermarketApi: {
     baseURL: 'https://supermarket.more-onion.at/api/v1'
