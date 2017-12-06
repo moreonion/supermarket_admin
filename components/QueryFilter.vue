@@ -2,6 +2,7 @@
   <div>
     <div class="btn-group mb-3">
       <b-btn class="btn btn-outline-primary" @click="addFilter">Add filter</b-btn>
+      <b-btn class="btn btn-outline-primary" @click="resetFilters">Reset</b-btn>
       <b-btn class="btn btn-outline-primary" @click="applyFilters">Apply</b-btn>
     </div>
     <div class="">
@@ -103,6 +104,11 @@ export default {
     },
     removeFilter (index) {
       this.localFilters.splice(index, 1)
+    },
+    // reset to empty array and emit an apply
+    resetFilters () {
+      this.localFilters = []
+      this.applyFilters()
     },
     applyFilters () {
       this.$emit('apply', JSON.parse(JSON.stringify(this.localFilters)))
