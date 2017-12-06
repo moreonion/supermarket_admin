@@ -5430,7 +5430,7 @@ vue-style-loader@^3.0.0:
     loader-utils "^1.0.2"
 
 vue-supermarket-api@./vue-supermarket-api:
-  version "0.2.1"
+  version "0.3.0"
   dependencies:
     axios "^0.17.1"
     lodash.merge "^4.6.0"

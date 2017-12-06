@@ -264,8 +264,7 @@ import merge from 'lodash.merge'
 
 import { mapGetters, mapActions } from 'vuex'
 
-// TODO maybe there is a better way to import this
-import operators from 'vue-supermarket-api/src/operators'
+import { operators } from 'vue-supermarket-api'
 
 // config
 import LabelApiMappings from '~/config/labels'
