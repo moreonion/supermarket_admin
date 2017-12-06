@@ -4,10 +4,11 @@
   "description": "Common API calls",
   "author": "Alex Berger <alex@more-onion.com>",
   "private": true,
-  "files": "src/*.js",
-  "main": "src/index.js",
+  "files": "dist/main.js",
+  "main": "dist/main.js",
   "scripts": {
-    "test": "mocha --require babel-register tests/"
+    "test": "mocha --require babel-register tests/",
+    "build": "webpack"
   },
   "peerDependencies": {
     "vue": "^2.4.4"
@@ -18,9 +19,12 @@
     "lodash.uniq": "^4.5.0"
   },
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
     "chai": "^4.1.2",
-    "mocha": "^4.0.1"
+    "mocha": "^4.0.1",
+    "webpack": "^3.10.0"
   }
 }
