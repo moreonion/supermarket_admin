@@ -5411,7 +5411,11 @@ vue-style-loader@^3.0.0:
     loader-utils "^1.0.2"
 
 vue-supermarket-api@./vue-supermarket-api:
-  version "0.1.0"
+  version "0.2.0"
+  dependencies:
+    axios "^0.16.2"
+    lodash.merge "^4.6.0"
+    lodash.uniq "^4.5.0"
 
 vue-template-compiler@~2.4.2:
   version "2.4.4"
