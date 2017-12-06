@@ -1,3 +1,13 @@
+<!--
+TODOs
+
+* adapt the filter fields to display different components for different types,
+  e.g. use a range input or a url input
+  this could enable basic validation
+* map the operators to better labels ("greater than" instead of "$gt")
+* deal with "$in" operator, which could be a list
+* autocomplete
+-->
 <template>
   <div>
     <div class="btn-group mb-3">
@@ -110,6 +120,8 @@ export default {
       this.localFilters = []
       this.applyFilters()
     },
+    // emit the list of filters to the parent
+    // the parent has to deal with persistence, calling the API, ...
     applyFilters () {
       this.$emit('apply', JSON.parse(JSON.stringify(this.localFilters)))
     }

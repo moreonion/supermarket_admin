@@ -1,3 +1,11 @@
+<!--
+TODOs
+
+* could be store-agnostic, i.e. do not read languages from vuex, but inject
+  them via props
+* create a container component around this component for the getter/setter
+  logic
+-->
 <template>
   <div>
     <b-form-checkbox
